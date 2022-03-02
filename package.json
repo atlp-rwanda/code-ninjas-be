@@ -9,6 +9,9 @@
     "license": "MIT",
     "scripts": {
         "build": "babel src -d lib",
+        "migrate": "npx sequelize-cli db:migrate",
+        "down": "npx sequelize-cli db:migrate:undo",
+        "makeUserModel": "npx sequelize-cli model:generate --name User --attributes firstname:string,lastname:string,email:string",
         "start": "yarn run build && node lib/index.js",
         "dev": "nodemon -r dotenv/config src/index.js"
     },
