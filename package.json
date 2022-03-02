@@ -8,8 +8,8 @@
   "license": "MIT",
   "scripts": {
     "build": "babel src -d lib",
-    "start": "yarn run build && node -r dotenv/config lib/index.js",
-    "dev": "nodemon -r dotenv/config src/index.js"
+    "start": "yarn run build && node lib/index.js",
+    "dev": "nodemon --exec babel-node -r dotenv/config src/index.js"
   },
   "dependencies": {
     "@babel/cli": "^7.17.6",
@@ -19,6 +19,7 @@
     "express": "^4.17.3"
   },
   "devDependencies": {
+    "@babel/node": "^7.16.8",
     "dotenv": "^16.0.0",
     "nodemon": "^2.0.15"
   }
