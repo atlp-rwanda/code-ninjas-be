@@ -1,0 +1,25 @@
+{
+  "name": "code-ninjas-be",
+  "version": "1.0.0",
+  "description": "Barefoot Nomad Application Backend",
+  "main": "lib/index.js",
+  "repository": "https://github.com/atlp-rwanda/code-ninjas-be.git",
+  "author": "Code Ninjas from Andela ATLP-6",
+  "license": "MIT",
+  "scripts": {
+    "build": "babel src -d lib",
+    "start": "yarn run build && node -r dotenv/config lib/index.js",
+    "dev": "nodemon -r dotenv/config src/index.js"
+  },
+  "dependencies": {
+    "@babel/cli": "^7.17.6",
+    "@babel/core": "^7.17.5",
+    "@babel/preset-env": "^7.16.11",
+    "core-js": "^3.21.1",
+    "express": "^4.17.3"
+  },
+  "devDependencies": {
+    "dotenv": "^16.0.0",
+    "nodemon": "^2.0.15"
+  }
+}
