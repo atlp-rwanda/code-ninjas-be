@@ -9,7 +9,8 @@
   "scripts": {
     "build": "babel src -d lib",
     "start": "yarn run build && node lib/index.js",
-    "dev": "nodemon --exec babel-node -r dotenv/config src/index.js"
+    "dev": "nodemon --exec babel-node -r dotenv/config src/index.js",
+    "lint": "eslint src/*.js --fix"
   },
   "dependencies": {
     "@babel/cli": "^7.17.6",
@@ -21,6 +22,9 @@
   "devDependencies": {
     "@babel/node": "^7.16.8",
     "dotenv": "^16.0.0",
+    "eslint": "^8.10.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.4",
     "nodemon": "^2.0.15"
   }
 }
