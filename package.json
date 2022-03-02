@@ -13,7 +13,8 @@
         "down": "npx sequelize-cli db:migrate:undo",
         "makeUserModel": "npx sequelize-cli model:generate --name User --attributes firstname:string,lastname:string,email:string",
         "start": "yarn run build && node lib/index.js",
-        "dev": "nodemon -r dotenv/config src/index.js"
+        "dev": "nodemon -r dotenv/config src/index.js",
+        "test": "mocha"
     },
     "dependencies": {
         "@babel/cli": "^7.17.6",
@@ -27,7 +28,10 @@
         "sequelize": "^6.17.0"
     },
     "devDependencies": {
+        "chai": "^4.3.6",
+        "chai-http": "^4.3.0",
         "dotenv": "^16.0.0",
+        "mocha": "^9.2.1",
         "nodemon": "^2.0.15",
         "sequelize-cli": "^6.4.1"
     }
