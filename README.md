@@ -19,20 +19,9 @@ Reminder to:
 
 For running without compiling first.
 
-**Note:** Remember to set **"type":"module"** in package.json first and delete before push
-
-```
-{
-    ...
-    "type":"module"
-}
-```
-
-Running script
 ```bash
 yarn run dev
 ```
-
 
 ## Pull Request Naming and Description Convention
 
