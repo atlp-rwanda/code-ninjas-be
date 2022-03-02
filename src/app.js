@@ -1,5 +1,8 @@
 import express from 'express';
-import sequelize from 'sequelize';
+import db from './config/config';
+db.authenticate().then(() => {
+    console.log('database connected......');
+});
 
 const app = express();
 
