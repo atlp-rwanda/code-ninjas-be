@@ -20,7 +20,7 @@ For running without compiling first.
 
 ```package.json
 {
-    devDependencies: {},
+    ...,
     "type":"module"
 }
 ```
