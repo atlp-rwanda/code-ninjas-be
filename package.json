@@ -1,0 +1,28 @@
+{
+  "name": "code-ninjas-be",
+  "version": "1.0.0",
+  "description": "Global travel and accomodation booking application",
+  "main": "src/index.js",
+  "repository": "https://github.com/atlp-rwanda/code-ninjas-be.git",
+  "author": "Code Ninjas",
+  "license": "MIT",
+  "scripts": {
+    "build": "babel src -d lib",
+    "start": "yarn run build && node lib/index.js",
+    "dev": "nodemon -r dotenv/config src/index.js"
+  },
+  "dependencies": {
+    "@babel/cli": "^7.17.6",
+    "@babel/core": "^7.17.5",
+    "@babel/preset-env": "^7.16.11",
+    "core-js": "^3.21.1",
+    "express": "^4.17.3",
+    "pg": "^8.7.3",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.17.0"
+  },
+  "devDependencies": {
+    "dotenv": "^16.0.0",
+    "nodemon": "^2.0.15"
+  }
+}
