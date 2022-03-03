@@ -1,5 +1,13 @@
-import express from 'express'
+import express from 'express';
+import dbase from './database/config/database.js';
+import usersRoute from './routes/userRoute.js';
+import dotenv from 'dotenv';
+dotenv.config();
 
-const app = express()
+dbase.authenticate().then(() => {
+    console.log('database connected......');
+});
 
-export default app
+const app = express();
+app.use('/api', usersRoute);
+export default app;
