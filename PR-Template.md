@@ -20,7 +20,8 @@ The description should contain the following headings and the related content:
 ### What does this PR do?
  Set up the migrations and models structure
 ### Description of Task to be completed?
- Set up the migrations and models structure, have a dummy user table and model setup to test the whole configuration
+Configure BareFoot Nomad to use PostgreSQL as DB Engine and Sequelize ORM By
+Setting up the migrations and models structure & creating user table and model setup to test the whole configuration
 
 ### How should this be manually tested?
 Get started By Running commands bellow:
