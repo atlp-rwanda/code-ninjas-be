@@ -1,7 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import dbase from './database/config/database.js';
-import usersRoute from './routes/userRoute.js';
+import dbase from './database/config/database';
+import usersRoute from './routes/userRoute';
 
 dotenv.config();
 
