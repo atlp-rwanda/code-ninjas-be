@@ -1,5 +1,4 @@
 {
-  
     "name": "code-ninjas-be",
     "version": "1.0.0",
     "description": "Barefoot Nomad Application Backend",
@@ -7,6 +6,7 @@
     "repository": "https://github.com/atlp-rwanda/code-ninjas-be.git",
     "author": "Code Ninjas from Andela ATLP-6",
     "license": "MIT",
+    "type": "module",
     "scripts": {
         "init-dir": "sequelize init",
         "migrate": "yarn sequelize-cli db:migrate",
@@ -18,7 +18,8 @@
         "start": "yarn run build && node lib/index.js",
         "dev": "nodemon --exec babel-node -r dotenv/config src/index.js",
         "lint": "eslint src/*.js --fix",
-        "prepare": "husky install"
+        "prepare": "husky install",
+        "test": "mocha --timeout 10000"
     },
     "dependencies": {
         "@babel/cli": "^7.17.6",
@@ -34,11 +35,14 @@
     },
     "devDependencies": {
         "@babel/node": "^7.16.8",
+        "chai": "^4.3.6",
+        "chai-http": "^4.3.0",
         "dotenv": "^16.0.0",
         "eslint": "^8.10.0",
         "eslint-config-airbnb-base": "^15.0.0",
         "eslint-plugin-import": "^2.25.4",
-        "nodemon": "^2.0.15",
-        "husky": "^7.0.0"
+        "husky": "^7.0.0",
+        "mocha": "^9.2.1",
+        "nodemon": "^2.0.15"
     }
 }

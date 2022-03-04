@@ -1,4 +1,4 @@
-import models from '../database/models';
+import models from '../database/models/user.js';
 const User = models.User;
 
 class UserController {
