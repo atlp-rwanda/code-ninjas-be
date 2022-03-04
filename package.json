@@ -1,5 +1,4 @@
 {
-  
     "name": "code-ninjas-be",
     "version": "1.0.0",
     "description": "Barefoot Nomad Application Backend",
@@ -30,11 +29,11 @@
         "pg": "^8.7.3",
         "pg-hstore": "^2.3.4",
         "sequelize": "^6.17.0",
-        "sequelize-cli": "^6.4.1"
+        "sequelize-cli": "^6.4.1",
+        "dotenv": "^16.0.0"
     },
     "devDependencies": {
         "@babel/node": "^7.16.8",
-        "dotenv": "^16.0.0",
         "eslint": "^8.10.0",
         "eslint-config-airbnb-base": "^15.0.0",
         "eslint-plugin-import": "^2.25.4",
