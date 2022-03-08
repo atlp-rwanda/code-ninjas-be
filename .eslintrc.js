@@ -9,7 +9,7 @@ module.exports = {
   parser: '@babel/eslint-parser',
   parserOptions: {
     sourceType: 'module',
-    allowImportExportEverywhere: true
+    allowImportExportEverywhere: true,
   },
   rules: {
     'one-var': 0,
