@@ -10,5 +10,6 @@ dbase.authenticate().then(() => {
 });
 
 const app = express();
+app.use(express.json());
 app.use('/api', usersRoute);
 export default app;
