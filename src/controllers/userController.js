@@ -3,6 +3,8 @@ import createUserService from '../services/UserServices';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
+const { User } = models;
+
 class UserController {
   static createUser = async (req, res) => {
     //check if a user is in the database
