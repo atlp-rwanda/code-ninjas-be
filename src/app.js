@@ -1,15 +1,14 @@
 import express from 'express';
-import dotenv from 'dotenv';
-import 'colors';
+import { config } from 'dotenv';
 import dbase from './database/config/database';
-import usersRoute from './routes/userRoute';
+import routes from './routes/index';
 
-dotenv.config();
+config();
 
 dbase.authenticate().then(() => {
-  console.log('database connected......'.green.bgBlue);
+  console.log('database connected...');
 });
 
 const app = express();
-app.use('/api', usersRoute);
+app.use('/api/v2', routes);
 export default app;
