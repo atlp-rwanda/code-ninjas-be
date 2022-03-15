@@ -7,16 +7,18 @@ export default (sequelize, DataTypes) => {
       // define association here
     }
   }
-  User.init(
-    {
-      firstName: DataTypes.STRING,
-      lastName: DataTypes.STRING,
-      email: DataTypes.STRING,
+  User.init({
+    firstName: DataTypes.STRING(24),
+    lastName: DataTypes.STRING(24),
+    email: {
+      type: DataTypes.STRING,
+      unique: true,
     },
-    {
-      sequelize,
-      modelName: 'User',
-    }
-  );
+    userName: DataTypes.STRING(24),
+    password: DataTypes.STRING,
+  }, {
+    sequelize,
+    modelName: 'User',
+  });
   return User;
 };
