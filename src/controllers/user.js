@@ -24,8 +24,7 @@ class UserController {
         lastName: req.body.LastName,
         email: req.body.Email,
         userName: req.body.UserName,
-        password: hashedPassword,
-        userId: uuidv4(),
+        password: hashedPassword
       });
 
       //create and Assign a token
