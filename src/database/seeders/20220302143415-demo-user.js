@@ -23,5 +23,5 @@ module.exports = {
   },
 };
 export async function down(queryInterface) {
-    return queryInterface.bulkDelete('Users', null, {});
+  return queryInterface.bulkDelete('Users', null, {});
 }
