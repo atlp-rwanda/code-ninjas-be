@@ -4,8 +4,7 @@ import passport from 'passport'
 import GoogleStrategy from 'passport-google-oauth2'
 const User = models.User
 
-const googleOauth = async() => {
-    const userToken = () => {}
+const googleOauth = async(req, res) => {
     passport.use(
         new GoogleStrategy({
                 clientID: process.env.GOOGLE_CLIENT_ID,

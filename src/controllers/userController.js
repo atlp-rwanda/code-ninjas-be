@@ -5,9 +5,7 @@ import jwt from 'jsonwebtoken'
 import passport from 'passport'
 import googleOauth from '../services/googleOauth'
 import facebookOauth from '../services/facebookOauth'
-import token from '../services/googleOauth'
 const User = models.User
-console.log(token)
 passport.use(passport.initialize())
 passport.use(passport.session())
 
