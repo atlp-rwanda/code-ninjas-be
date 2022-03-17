@@ -1,6 +1,8 @@
 # Barefoot Nomad
 
 [![Reviewed by Hound](https://img.shields.io/badge/Reviewed_by-Hound-8E64B0.svg)](https://houndci.com)
+[![Maintainability](https://api.codeclimate.com/v1/badges/c5f6cd4b411904b87e8f/maintainability)](https://codeclimate.com/github/atlp-rwanda/code-ninjas-be/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/c5f6cd4b411904b87e8f/test_coverage)](https://codeclimate.com/github/atlp-rwanda/code-ninjas-be/test_coverage)
 
 ## Vision
 
