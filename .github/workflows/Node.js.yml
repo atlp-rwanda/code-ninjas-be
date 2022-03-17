@@ -1,30 +1,41 @@
 name: CI
-
 on:
   push:
-    branches: [ch-setup-test-181414701]
+    branches: 
+      - "**"
   pull_request:
-    branches: [ch-setup-test-181414701]
+    branches: [ main, develop ]
 
-    # Allows you to run this workflow manually from the Actions tabb
   workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ ubuntu-latest ]
+        node-version: [ 14.x ]
 
     steps:
-      - uses: actions/checkout@v2
-      - run: yarn install
-      - run: yarn run build
-      - run: yarn test
-      - name: Code Climate Test Reporter
-        uses: aktions/codeclimate-test-reporter@v1
-        with:
-          codeclimate-test-reporter-id: d1a7faa48cd92b07f5561dce5e948e3e0c49ffb4f4c469bd1a3b12b5ee4a96ff
-          command: after-build
+    - uses: actions/checkout@v2
+    - name: Uses Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Configure test reporter
+      uses: amancevice/setup-code-climate@v0
+      with:
+        cc_test_reporter_id: ${{ secrets.CC_TEST_REPORTER_ID }}
+    - run: cc-test-reporter before-build
+    - run: yarn install
+    - run: yarn build
+    - run: yarn test
+    - run: cc-test-reporter after-build
     env:
       CI: true
       DB_CONNECT: ${{ secrets.DB_CONNECT }}
       DEV_DB: ${{ secrets.DEV_DB }}
       TEST_DB: ${{ secrets.TEST_DB }}
+      
