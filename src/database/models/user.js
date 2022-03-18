@@ -24,10 +24,9 @@ module.exports = (sequelize, DataTypes) => {
       roleId: DataTypes.STRING,
       isVerified: DataTypes.BOOLEAN,
     },
-    {
-      sequelize,
-      modelName: 'User',
-    }
-  );
+     {
+    sequelize,
+    modelName: 'User',
+  });
   return User;
 };
