@@ -1,14 +1,27 @@
-export async function up(queryInterface) {
-    return queryInterface.bulkInsert('Users', [{
-        userName: 'Johnny',
-        email: 'john.doe@andela.com',
+module.exports = {
+  async up(queryInterface, Sequelize) {
+    return queryInterface.bulkInsert('Users', [
+      {
         firstName: 'John',
         lastName: 'Doe',
-        password: 'Password@2022',
+        email: 'example@example.com',
+        userName: 'testUser1',
+        password: 'password',
         createdAt: new Date(),
         updatedAt: new Date(),
-    }, ]);
-}
+      },
+      {
+        firstName: 'andela',
+        lastName: 'kigali',
+        email: 'andela@andela.com',
+        userName: 'testUser2',
+        password: 'password2',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ]);
+  },
+};
 export async function down(queryInterface) {
     return queryInterface.bulkDelete('Users', null, {});
 }
