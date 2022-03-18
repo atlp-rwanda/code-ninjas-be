@@ -13,10 +13,13 @@ module.exports = {
       lastName: {
         type: Sequelize.STRING,
       },
-      username: {
+      email: {
         type: Sequelize.STRING,
       },
-      email: {
+      userName: {
+        type: Sequelize.STRING,
+      },
+      password: {
         type: Sequelize.STRING,
       },
       createdAt: {
@@ -29,7 +32,7 @@ module.exports = {
       },
     });
   },
-  async down(queryInterface, Sequelize) {
+  async down(queryInterface) {
     await queryInterface.dropTable('Users');
   },
 };

@@ -1,8 +1,9 @@
 export async function up(queryInterface) {
   return queryInterface.bulkInsert('Users', [
     {
-      username: 'Johnny',
+      userName: 'Johnny',
       email: 'john.doe@andela.com',
+      password: '$2b$10$LqCj3dIDNt5k2Sf9KDXg3eYcJXG81WnVWmQr0EMIDcwzRUrw8IPAW',
       firstName: 'John',
       lastName: 'Doe',
       createdAt: new Date(),

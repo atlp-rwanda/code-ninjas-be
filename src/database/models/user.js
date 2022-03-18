@@ -1,9 +1,8 @@
-/* eslint-disable require-jsdoc */
 import { Model } from 'sequelize';
 
 export default (sequelize, DataTypes) => {
   class User extends Model {
-    static associate(models) {
+    static associate() {
       // define association here
     }
   }
@@ -12,6 +11,8 @@ export default (sequelize, DataTypes) => {
       firstName: DataTypes.STRING,
       lastName: DataTypes.STRING,
       email: DataTypes.STRING,
+      userName: DataTypes.STRING,
+      password: DataTypes.STRING,
     },
     {
       sequelize,
