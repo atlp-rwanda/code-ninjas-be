@@ -33,10 +33,6 @@ class UserController {
         email: req.body.Email,
         userName: req.body.UserName,
         password: hashedPassword,
-<<<<<<< HEAD
-=======
-        userId: uuidv4(),
->>>>>>> c93a2f2 (Added User Registration)
       });
 
       //create and Assign a token
