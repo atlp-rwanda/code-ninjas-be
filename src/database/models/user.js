@@ -1,4 +1,3 @@
-/* eslint-disable require-jsdoc */
 import { Model } from 'sequelize';
 
 export default (sequelize, DataTypes) => {

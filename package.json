@@ -11,8 +11,7 @@
     "migrate": "yarn sequelize-cli db:migrate",
     "down": "yarn sequelize-cli db:migrate:undo",
     "seed": "yarn sequelize-cli db:seed:all",
-    "makeSeed": "yarn sequelize-cli seed:generate --name demo-user",
-    "makeUserModel": "yarn sequelize-cli model:generate --name User --attributes firstName:string,lastName:string,email:string",
+    "unseed": "yarn sequelize-cli db:seed:undo:all",
     "build": "babel src -d lib",
     "start": "yarn run build && node lib/index.js",
     "dev": "nodemon --exec babel-node -r dotenv/config src/index.js",
@@ -21,8 +20,11 @@
   },
   "dependencies": {
     "@babel/cli": "^7.17.6",
-    "@babel/preset-env": "^7.16.11",
-    "core-js": "^3.21.1",
+    "@babel/core": "^7.8.4",
+    "@babel/node": "^7.8.4",
+    "@babel/preset-env": "^7.8.4",
+    "babel-plugin-istanbul": "^6.0.0",
+    "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
     "pg": "^8.7.3",
@@ -33,16 +35,16 @@
     "swagger-ui-express": "^4.3.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.17.5",
     "@babel/eslint-parser": "^7.17.0",
-    "@babel/node": "^7.16.8",
-    "eslint": "^8.10.0",
+    "@babel/register": "^7.8.3",
+    "eslint": "8.1.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-prettier": "^4.0.0",
     "husky": "^7.0.0",
+    "istanbul": "^0.4.5",
     "nodemon": "^2.0.15",
-    "prettier": "^2.5.1"
+    "prettier": "^2.6.0"
   }
 }
