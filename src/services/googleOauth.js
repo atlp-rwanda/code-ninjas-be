@@ -1,8 +1,8 @@
-import models from '../database/models'
-import jwt from 'jsonwebtoken'
-import passport from 'passport'
-import GoogleStrategy from 'passport-google-oauth2'
-const User = models.User
+import models from '../database/models';
+import jwt from 'jsonwebtoken';
+import passport from 'passport';
+import GoogleStrategy from 'passport-google-oauth2';
+const User = models.User;
 
 const googleOauth = async(req, res) => {
     passport.use(
@@ -22,21 +22,21 @@ const googleOauth = async(req, res) => {
                         googleId: profile.id,
                         email: profile.email,
                     },
-                })
+                });
                 const token = jwt.sign({
                         user: {
                             id: newUser.dataValues.id,
                         },
                     },
                     process.env.TOKEN_SECRET, { expiresIn: process.env.TOKEN_EXPIRE }
-                )
-                if (created) return res.header('auth-token', token).send(token)
+                );
+                // if (created) return res.header('auth-token', token).send(token)
 
-                console.log(token)
-                return done(null, profile, token, newUser)
+                console.log(token);
+                return done(null, profile, token, newUser);
             }
         )
-    )
-}
+    );
+};
 
-export default googleOauth
+export default googleOauth;

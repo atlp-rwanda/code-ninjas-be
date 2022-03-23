@@ -10,6 +10,7 @@
         "init-dir": "sequelize init",
         "migrate": "yarn sequelize-cli db:migrate",
         "down": "yarn sequelize-cli db:migrate:undo",
+        "makeUserModel": "yarn sequelize-cli model:generate --name User --attributes firstName:string,lastName:string,email:string,userName:string,password:string,facebookId:string,googleId:string,roleId:string,isVerified:string",
         "seed": "yarn sequelize-cli db:seed:all",
         "unseed": "yarn sequelize-cli db:seed:undo:all",
         "build": "babel src -d lib",
