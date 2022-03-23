@@ -1,22 +1,42 @@
-import models from '../database/models';
-import createUserService from '../services/UserServices';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-const { v4: uuidv4 } = require('uuid');
-const User = models.User;
+import models from '../database/models'
+import createUserService from '../services/UserServices'
+import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
+import passport from 'passport'
+import googleOauth from '../services/googleOauth'
+import facebookOauth from '../services/facebookOauth'
+
+const User = models.User
+
+passport.use(passport.initialize())
+passport.use(passport.session())
+
+//Google authentication
+googleOauth()
+
+//Google authentication
+facebookOauth()
+
+passport.serializeUser(function(user, done) {
+    done(null, user)
+})
+
+passport.deserializeUser(function(user, done) {
+    done(null, user)
+})
 
 class UserController {
     static createUser = async(req, res) => {
         //check if a user is in the database
         const emailExists = await User.findOne({
             where: { email: req.body.Email },
-        });
+        })
         if (emailExists)
-            return res.status(400).json({ message: 'Email already Exists' });
+            return res.status(400).json({ message: 'Email already Exists' })
 
         //Hash the Password
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(req.body.Password, salt);
+        const salt = await bcrypt.genSalt(10)
+        const hashedPassword = await bcrypt.hash(req.body.Password, salt)
 
         try {
             const user = await createUserService({
@@ -25,22 +45,29 @@ class UserController {
                 email: req.body.Email,
                 userName: req.body.UserName,
                 password: hashedPassword,
-                userId: uuidv4(),
-            });
+            })
 
             //create and Assign a token
             const token = jwt.sign({
-                    user: { id: user.userId, username: user.userName, email: user.email },
+                    user: {
+                        id: user.id,
+                        username: user.userName,
+                        email: user.email,
+                    },
                 },
                 process.env.TOKEN_SECRET, { expiresIn: process.env.TOKEN_EXPIRE }
-            );
-            res.header('auth-token', token);
+            )
+            res.header('auth-token', token)
             res.status(200).json({
                 message: 'User created successfully',
-            });
+            })
         } catch (error) {
-            res.status(400).json({ error: error.message });
+            res.status(400).json({ error: error.message })
         }
-    };
+    }
+
+    static success = async(req, res) => {
+        res.send({ Message: 'logged in successfully' })
+    }
 }
-export default UserController;
+export default UserController
