@@ -6,7 +6,7 @@ import routes from './routes/index';
 config();
 
 dbase.authenticate().then(() => {
-    console.log('database connected...');
+  console.log('database connected...');
 });
 
 const app = express();
