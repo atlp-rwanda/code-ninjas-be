@@ -5,9 +5,9 @@ import jwt from 'jsonwebtoken'
 import passport from 'passport'
 import googleOauth from '../services/googleOauth'
 import facebookOauth from '../services/facebookOauth'
-
+import token from '../services/googleOauth'
 const User = models.User
-
+console.log(token)
 passport.use(passport.initialize())
 passport.use(passport.session())
 
@@ -68,6 +68,15 @@ class UserController {
 
     static success = async(req, res) => {
         res.send({ Message: 'logged in successfully' })
+    }
+    static login = async(req, res) => {
+        res.render('login')
+    }
+    static protected = async(req, res) => {
+        let userId = req.user
+        res.send({
+            Message: `welcome with id "${userId.user.id}", this is a tesing page`,
+        })
     }
 }
 export default UserController

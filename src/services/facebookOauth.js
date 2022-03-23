@@ -12,8 +12,8 @@ const facebookOauth = () => {
                 callbackURL: 'http://localhost:3000/api/auth/facebook/barefoot',
                 profileFields: ['id', 'displayName', 'name', 'gender', 'profileUrl'],
             },
-            function(accessToken, refreshToken, profile, cb) {
-                const { user, created } = User.findOrCreate({
+            async(accessToken, refreshToken, profile, cb) => {
+                const [user, created] = await User.findOrCreate({
                     where: { facebookId: profile.id },
                     defaults: {
                         firstName: profile.name.familyName,
@@ -22,8 +22,16 @@ const facebookOauth = () => {
                         facebookId: profile.id,
                     },
                 })
+                const token = jwt.sign({
+                        user: {
+                            id: user.dataValues.id,
+                        },
+                    },
+                    process.env.TOKEN_SECRET, { expiresIn: process.env.TOKEN_EXPIRE }
+                )
+                if (created) return res.header('auth-token', token)
 
-                console.log(profile)
+                console.log(token)
                 return cb(null, profile)
             }
         )

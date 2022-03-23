@@ -1,11 +1,19 @@
-const userAuth = (req, res, next) => {
-    if (req.isAuthenticated()) {
-        console.log(req.user)
-        return next()
+import jwt, { verify } from 'jsonwebtoken'
+
+const verifyMiddleware = (req, res, next) => {
+    const token = req.header('auth-token')
+    if (!token) {
+        return res
+            .status(401)
+            .send({ Message: 'You are not allowed to access this page' })
     } else {
-        res.status(401).send({ message: 'not allowed to access this page' })
-        console.log(req.user)
+        try {
+            const authorized = jwt.verify(token, process.env.TOKEN_SECRET)
+            req.user = authorized
+            next()
+        } catch (error) {
+            res.status(400).send({ Message: 'invalide token' })
+        }
     }
 }
-
-export default userAuth
+export default verifyMiddleware

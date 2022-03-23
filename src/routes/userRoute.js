@@ -1,5 +1,5 @@
 import express from 'express'
-import userAuth from '../middlewares/auth'
+import verifyMiddleware from '../middlewares/auth'
 import UserController from '../controllers/userController'
 import UserValidation from '../validations/UserValidation'
 
@@ -27,10 +27,11 @@ router.get(
 router.get(
     '/auth/google/callback',
     passport.authenticate('google', {
-        successRedirect: '/api/auth/google/success',
         failureRedirect: '/auth/google/failure',
+        successRedirect: '/api/auth/google/success',
     })
 )
 router.get('/auth/google/success', UserController.success)
+router.get('/protected', verifyMiddleware, UserController.protected)
 
 export default router
