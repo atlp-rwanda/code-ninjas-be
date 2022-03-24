@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 export const generateToken = (params, secret, expire) => {
-  return jwt.sign(params, secret, expire);
+    return jwt.sign(params, secret, expire);
 };
 
 // const token = jwt.sign(

@@ -6,10 +6,10 @@ import EmailValidation from '../middlewares/EmailValidation';
 const router = Router();
 
 router.post(
-  '/register',
-  UserValidation.verifyUser,
-  EmailValidation.checkEmail,
-  UserController.createUser
+    '/register',
+    UserValidation.verifyUser,
+    EmailValidation.checkEmail,
+    UserController.createUser
 );
 
 export default router;
