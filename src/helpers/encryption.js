@@ -2,16 +2,16 @@ import 'dotenv/config';
 import bcrypt from 'bcryptjs';
 import { sign, verify } from 'jsonwebtoken';
 
-const { JWT_SECRET, JWT_EXPIRE } = process.env;
+const { TOKEN_SECRET } = process.env;
 
 class Protection {
-  static async signToken(data) {
-    const token = sign(data, JWT_SECRET, { expiresIn: JWT_EXPIRE });
+  static async signToken(data, expire) {
+    const token = sign(data, TOKEN_SECRET, { expiresIn: expire });
     return token;
   }
 
   static async verifyToken(token) {
-    const data = verify(token, JWT_SECRET);
+    const data = verify(token, TOKEN_SECRET);
     return data;
   }
 

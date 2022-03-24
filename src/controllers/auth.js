@@ -1,22 +1,43 @@
-/* eslint-disable require-jsdoc */
-/* eslint-disable class-methods-use-this */
-/* eslint-disable no-unused-vars */
 import { config } from 'dotenv';
 import userServices from '../services/user';
 import successRes from '../utils/successResponse';
-import ErrorRess from '../utils/errorResponse';
+import ErrorResponse from '../utils/errorResponse';
+import encryption from '../helpers/encryption';
 
 config();
 
-const { userLogout } = userServices;
+const duration = process.env.TOKEN_EXPIRE;
+
+const { findUser } = userServices;
+const { signToken, checkPassword } = encryption;
 
 class Auth {
-  async Logout(req, res) {
+  static async login(req, res, next) {
     try {
-      const user = await userLogout(req.headers.authorization.split(' ')[1]);
-      return successRes(res, 200, 'Log out successfully', user.email);
+      const { email, password } = req.body;
+      const foundUser = await findUser({ email });
+      if (!foundUser) return ErrorResponse(res, 404, 'User Not found');
+      const isMatch = checkPassword(password, foundUser.password);
+      if (!isMatch) return ErrorResponse(res, 401, 'Invalid credentials');
+
+      const token = await signToken(
+        {
+          id: foundUser.id,
+          email: foundUser.email,
+        },
+        duration
+      );
+      return successRes(res, 200, 'User login successful :)', {
+        token,
+      });
     } catch (err) {
-      return ErrorRess(res, 500, `Error while logging out, ${err.message}`);
+      return next(
+        new ErrorResponse(
+          res,
+          500,
+          `Oh No! Error while logging user :( ${err.message}`
+        )
+      );
     }
   }
 }

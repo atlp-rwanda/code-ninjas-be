@@ -9,6 +9,7 @@ const dbase = new Sequelize('barefoot', 'postgres', process.env.DB_PASSWORD, {
   dialect: 'postgres',
 
 const env = envConfigs[process.env.NODE_ENV] || envConfigs.development;
+
 const dbase = new Sequelize(env.url, {
   dialectOptions: {
     ssl: {
