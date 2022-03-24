@@ -5,8 +5,13 @@ import UserValidation from '../validations/UserValidation';
 import EmailValidation from '../middlewares/EmailValidation';
 import googleController from '../controllers/GoogleSocialController';
 import facebookController from '../controllers/FacebookSocialController';
+import routeValidators from '../middlewares/validator';
+import auth from '../controllers/auth';
 import '../services/googlePassport';
 import '../services/facebookPassport';
+
+const { loginValidate } = routeValidators;
+const { login } = auth;
 
 const router = Router();
 
@@ -35,6 +40,8 @@ router.get(
   googleController.onSuccess
 );
 
-router.get('/login', googleController.loginWithGoogle);
+router.get('/social/login', googleController.loginWithGoogle);
+
+router.route('/login').post(loginValidate, login);
 
 export default router;

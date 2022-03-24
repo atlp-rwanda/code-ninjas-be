@@ -20,6 +20,16 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date(),
       },
+      {
+        userName: 'Johnny',
+        email: 'vwlixyakslqavbonkw@kvhrw.com',
+        password:
+          '$2b$10$bQUIGi5mWZ8NRFMN3.VjgOiV1fPTYExzxwhOpL.m/bgD6tiLS2hxm',
+        firstName: 'John',
+        lastName: 'Doe',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
     ]);
   },
 };
