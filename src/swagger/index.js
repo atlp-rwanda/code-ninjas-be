@@ -64,6 +64,24 @@ const options = {
                 },
             },
         },
+
+        '/api/login': {
+            post: {
+                tags: ['Users'],
+                description: '<a href="/api/google">login with google</a> | <a href="/api/facebook">login with facebook</a>',
+                parameters: [],
+                requestBody: {},
+                responses: {
+                    200: {
+                        description: 'Logged in successfully',
+                    },
+                    400: {
+                        description: 'Bad Request',
+                    },
+                },
+            },
+        },
+
         components: {
             schemas: {
                 User: {

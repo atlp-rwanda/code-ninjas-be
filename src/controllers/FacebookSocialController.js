@@ -9,14 +9,15 @@ passport.use(passport.session());
 class facebookController {
     static onSuccess = async(req, res) => {
         try {
+            const { name, id, email, displayName } = req.user;
             const [newUser, created] = await User.findOrCreate({
                 where: { googleId: req.user.id },
                 defaults: {
-                    firstName: req.user.name.familyName,
-                    lastName: req.user.name.givenName,
-                    userName: req.user.displayName,
-                    googleId: req.user.id,
-                    email: req.user.email,
+                    firstName: name.familyName,
+                    lastName: name.givenName,
+                    userName: displayName,
+                    googleId: id,
+                    email: email,
                 },
             });
             const token = jwt.sign({
