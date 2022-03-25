@@ -29,6 +29,6 @@ router.get(
 
 router.get('/login', googleController.loginWithGoogle);
 
-router.get('/trip/request', tripController.requestAtrip);
+router.get('/trip/request', verifyMiddleware, tripController.requestAtrip);
 
 export default router;
