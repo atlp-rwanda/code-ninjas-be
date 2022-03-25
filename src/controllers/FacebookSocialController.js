@@ -1,7 +1,7 @@
 import models from '../database/models';
 import passport from 'passport';
 import jwt from 'jsonwebtoken';
-import '../services/googlePassport';
+import '../services/facebookPassport';
 const User = models.User;
 passport.use(passport.initialize());
 passport.use(passport.session());
