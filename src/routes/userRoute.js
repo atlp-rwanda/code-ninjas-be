@@ -3,6 +3,7 @@ import verifyMiddleware from '../middlewares/auth';
 import googleController from '../controllers/GoogleSocialController';
 import '../services/googlePassport';
 import '../services/facebookPassport';
+import tripController from '../controllers/requestTrip';
 
 import passport from 'passport';
 const router = express.Router();
@@ -27,5 +28,7 @@ router.get(
 );
 
 router.get('/login', googleController.loginWithGoogle);
+
+router.get('/trip/request', tripController.requestAtrip);
 
 export default router;
