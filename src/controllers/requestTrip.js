@@ -31,6 +31,16 @@ class tripController {
             res.send(data);
         });
     };
+    static viewTripRequest_requester = async(req, res) => {
+        let user = req.user;
+        TripRequest.findAll({
+            where: {
+                requesterId: user.user.id,
+            },
+        }).then((data) => {
+            res.send(data);
+        });
+    };
 }
 
 export default tripController;
