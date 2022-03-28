@@ -1,7 +1,8 @@
 import express from 'express';
 import { config } from 'dotenv';
 import dbase from './database/config/database';
-import routes from './routes/index';
+import authRoute from './routes/user';
+import docs from './swagger/index';
 
 config();
 
@@ -10,5 +11,7 @@ dbase.authenticate().then(() => {
 });
 
 const app = express();
-app.use('/api/v2', routes);
+app.use(express.json());
+app.use('/api/auth', authRoute);
+app.use('/api/docs', docs);
 export default app;

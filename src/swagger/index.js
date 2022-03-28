@@ -13,31 +13,97 @@ const paths = {
 };
 
 const options = {
-  definition: {
-    info: {
-      title: 'Barefoot Nomad',
-      version: '1.0.0',
-      description:
-        'Barefoot Nomad - Make company global travel and accommodation easy and convenient for the strong workforce of savvy members of staff, by leveraging the modern web.',
+  openapi: '3.0.1',
+  info: {
+    title: 'Barefoot Nomad',
+    version: '1.0.0',
+    description:
+      'Barefoot Nomad - Make company global travel and accommodation easy and convenient for the strong workforce of savvy members of staff, by leveraging the modern web.',
+  },
+  host: process.env === 'production' ? heroku : local,
+  basePath: '/api',
+  securityDefinitions: {
+    bearerAuth: {
+      type: 'apiKey',
+      name: 'Authorization',
+      scheme: 'bearer',
+      in: 'header',
     },
-    host: process.env === 'production' ? heroku : local,
-    basePath: '/api/v2',
-    securityDefinitions: {
-      bearerAuth: {
-        type: 'apiKey',
-        name: 'Authorization',
-        scheme: 'bearer',
-        in: 'header',
+  },
+  // apis: ['./routes/*.js'],
+  // tags: [{}],
+  paths: {
+    '/api/auth/register': {
+      post: {
+        tags: ['Users'],
+        description: 'Create users',
+        parameters: [],
+        requestBody: {
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/User',
+              },
+              example: {
+                FirstName: 'JaneD',
+                LastName: 'DoeS',
+                Email: 'newcheck@gmail.com',
+                UserName: 'DoeS',
+                Password: 'Password@2022',
+              },
+            },
+          },
+          required: true,
+        },
+        responses: {
+          200: {
+            description: 'New User was created successfully',
+          },
+          400: {
+            description: 'Bad Request',
+          },
+        },
       },
     },
   },
-  apis: ['./routes/*.js'],
-  tags: [{}],
-  paths,
+  components: {
+    schemas: {
+      User: {
+        type: 'object',
+
+        properties: {
+          id: {
+            type: 'string',
+            description: 'The auto-generated id of the blog',
+          },
+          firstName: {
+            type: 'string',
+            description: "User's FirstName",
+          },
+          lastName: {
+            type: 'string',
+            description: "User's LastName",
+          },
+          username: {
+            type: 'string',
+            description: "User's UserName",
+          },
+          email: {
+            type: 'string',
+            description: "User's Email",
+          },
+          password: {
+            type: 'string',
+            description: "User's Password",
+          },
+        },
+      },
+    },
+  },
 };
 
-const specs = swaggerJsDoc(options);
+// const specs = swaggerJsDoc(options);
 
-docrouter.use('/', serve, setup(specs, { explorer: true }));
+docrouter.use('/', serve, setup(options));
 
 export default docrouter;
