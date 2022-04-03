@@ -12,59 +12,66 @@ chai.use(chaiHttp);
 
 describe('Testing authentication routes', () => {
   before(async () => {
-    const Dummy = await chai
-      .request(app)
-      .post('/api/auth/register')
-      .send(credentials);
+    await chai.request(app).post('/api/auth/register').send(credentials);
   });
-  it('should validate login with empty email', async () => {
-    const { Password: password } = credentials;
+
+  it('should not validate login with empty email', async () => {
+    const { password } = credentials;
     const res = await chai
       .request(app)
       .post('/api/auth/login')
       .send({ password });
-    expect(res.status).to.be.equal(400);
-    expect(res.body).to.have.property(
-      'message',
-      'ValidationError: "email" is required'
-    );
+    expect(res.status).to.be.equal(422);
+    expect(res.body).to.have.property('error', 'Please fill all fields');
   });
-  it('should validate login with empty password', async () => {
-    const { Email: email } = credentials;
+
+  it('should not validate login with empty password', async () => {
+    const { email } = credentials;
     const res = await chai.request(app).post('/api/auth/login').send({ email });
-    expect(res.status).to.be.equal(400);
-    expect(res.body).to.have.property(
-      'message',
-      'Error: Please fill all fields'
-    );
+    expect(res.status).to.be.equal(422);
+    expect(res.body).to.have.property('error', 'Please fill all fields');
   });
-  it('should validate login with invalid email', async () => {
+
+  it('should not validate login with invalid email', async () => {
     const res = await chai
       .request(app)
       .post('/api/auth/login')
       .send({ email: 'test@gmail.com', password: 'unkown' });
     expect(res.status).to.be.equal(404);
-    expect(res.body).to.have.property('message', 'Invalid credentials');
+    expect(res.body).to.have.property('error', 'Invalid credentials');
   });
-  it('should validate login with invalid password', async () => {
-    const Dummy = await chai
-      .request(app)
-      .post('/api/auth/register')
-      .send(credentials);
-    const { Email: email } = credentials;
+
+  it('should not validate login with invalid password', async () => {
+    const { email } = credentials;
     const res = await chai
       .request(app)
       .post('/api/auth/login')
       .send({ email, password: 'unkown' });
-    expect(res.status).to.be.equal(401);
-    expect(res.body).to.have.property('message', 'Invalid credentials');
+    expect(res.status).to.be.equal(404);
+    expect(res.body).to.have.property('error', 'Invalid credentials');
   });
-  it('should login a user.', async () => {
-    const Dummy = await chai
+
+  it('Should not login a user with an unverified email', async () => {
+    const { email, password } = credentials;
+    const res = await chai
       .request(app)
-      .post('/api/auth/register')
-      .send(credentials);
-    const { Email: email, Password: password } = credentials;
+      .post('/api/auth/login')
+      .send({ email, password });
+    expect(res.status).to.be.equal(403);
+    expect(res.body).to.have.property('error', 'Unverified account');
+  });
+
+  it('should login a user.', async () => {
+    const { email, password } = credentials;
+
+    // verify account before login
+    const { body } = await chai
+      .request(app)
+      .get(`/api/users/send/confirm/${email}`)
+      .send();
+    await chai.request(app).get(`/api/users/verify/${body.token}`).send();
+
+    // login
     const res = await chai
       .request(app)
       .post('/api/auth/login')
@@ -78,19 +85,15 @@ describe('Testing authentication routes', () => {
       .get('/api/auth/logout')
       .set('Authorization', ' ');
     expect(res.status).to.be.equal(401);
-    expect(res.body).to.have.property('message', 'Please login first!');
+    expect(res.body).to.have.property('error', 'Please login first!');
   });
   it('should logout a user.', async () => {
-    const Dummy = await chai
-      .request(app)
-      .post('/api/auth/register')
-      .send(credentials);
-    const { Email: email, Password: password } = credentials;
+    const { email, password } = credentials;
     const user = await chai
       .request(app)
       .post('/api/auth/login')
       .send({ email, password });
-    const { accessToken } = user.body.data;
+    const { accessToken } = user.body;
     const res = await chai
       .request(app)
       .get('/api/auth/logout')

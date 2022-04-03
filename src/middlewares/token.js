@@ -1,4 +1,4 @@
-import redis from '../database/config/redis.config';
+import redis from '../database/redis';
 import ErrorResponse from '../utils/errorResponse';
 import encryption from '../helpers/encryption';
 
@@ -13,7 +13,7 @@ class tokenValidation {
       const token = req.header('Authorization').replace('Bearer ', '');
 
       if (!token) {
-        return ErrorResponse(res, 401, 'Please login first!');
+        return ErrorResponse.unauthenticatedError(res, 'Please login first!');
       }
 
       const decoded = await verifyToken(token, secret);
@@ -26,11 +26,14 @@ class tokenValidation {
         `Blacklisted_${decoded.user.id.toString()}`,
         (err, data) => {
           if (err) {
-            return ErrorResponse(res, 500, 'Unable to perform action!');
+            return ErrorResponse.internalServerError(
+              res,
+              'Unable to perform action!'
+            );
           }
 
           if (data === token) {
-            return ErrorResponse(res, 401, 'Access denied');
+            return ErrorResponse.unauthenticatedError(res, 'Access denied');
           }
 
           next();
@@ -38,7 +41,10 @@ class tokenValidation {
       );
     } catch (err) {
       return next(
-        new ErrorResponse(res, 500, `Unable to verify user... ${err.message}`)
+        new ErrorResponse.internalServerError(
+          res,
+          `Unable to verify user... ${err.message}`
+        )
       );
     }
   };
@@ -47,7 +53,7 @@ class tokenValidation {
     try {
       const { token } = req.body;
       if (!token) {
-        return ErrorResponse(res, 400, 'Invalid request');
+        return ErrorResponse.badRequestError(res, 'Invalid request');
       }
       const decoded = await verifyRefresh(token, refresh);
 
@@ -55,23 +61,33 @@ class tokenValidation {
 
       await redis.get(decoded.user.id.toString(), (err, data) => {
         if (err) {
-          return ErrorResponse(
+          return ErrorResponse.internalServerError(
             res,
-            500,
             `Internal server error ${err.message}`
           );
         }
         if (data === null) {
-          return ErrorResponse(res, 401, 'Invalid request, please sign in!');
+          return ErrorResponse.unauthenticatedError(
+            res,
+            'Invalid request, please sign in!'
+          );
         }
         const userToken = JSON.parse(data);
         if (userToken.token !== token) {
-          return ErrorResponse(res, 401, 'Invalid request, Unauthorised user!');
+          return ErrorResponse.unauthenticatedError(
+            res,
+            'Invalid request, Unauthorised user!'
+          );
         }
         next();
       });
     } catch (err) {
-      return next(new ErrorResponse(res, 500, 'Unable to generate token', err));
+      return next(
+        new ErrorResponse.internalServerError(
+          res,
+          `Unable to generate token ${err}`
+        )
+      );
     }
   };
 }

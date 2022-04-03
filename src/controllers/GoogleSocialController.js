@@ -1,7 +1,7 @@
 import passport from 'passport';
 import models from '../database/models';
-import generateToken from '../services/TokenService';
 import RefreshToken from '../services/token';
+import { generateToken } from '../helpers/token';
 import '../services/googlePassport';
 
 const { User } = models;
@@ -28,9 +28,7 @@ class googleController {
       });
       const secret = process.env.TOKEN_SECRET;
 
-      const duration = {
-        expiresIn: process.env.TOKEN_EXPIRE,
-      };
+      const duration = process.env.TOKEN_EXPIRE;
       const params = {
         user: { id: newUser.dataValues.id, email: newUser.dataValues.email },
       };

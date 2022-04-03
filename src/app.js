@@ -1,19 +1,22 @@
 import express from 'express';
-import { config } from 'dotenv';
 import cors from 'cors';
 import dbase from './database/config/database';
-import routes from './routes/index';
-import looger from './middlewares/logger';
-
-config();
+import routes from './routes';
+import logger from './middlewares/logger';
 
 dbase.authenticate().then(() => {
   console.log('database connected...');
 });
 
 const app = express();
+
 app.use(express.json());
 app.set('view engine', 'ejs');
+
+app.use(logger);
+app.get('/', (req, res) => {
+  res.redirect('/api/docs');
+});
 
 app.use(cors());
 app.use((req, res, next) => {
@@ -24,8 +27,6 @@ app.use((req, res, next) => {
   );
   next();
 });
-app.use(express.json());
-app.use(looger);
 
 app.use('/api', routes);
 

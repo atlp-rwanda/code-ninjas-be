@@ -1,0 +1,6 @@
+{
+    "reporter": ["lcov", "text", "text-summary"],
+    "exclude": ["src/database", "src/swagger"],
+    "sourceMap": false,
+    "instrument": false
+}
