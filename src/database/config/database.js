@@ -6,7 +6,6 @@ const envConfigs = require('./config');
 config();
 
 const env = envConfigs[process.env.NODE_ENV] || envConfigs.development;
-
 const dbase = new Sequelize(env.url, {
   dialectOptions: {
     ssl: {

@@ -1,4 +1,4 @@
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 import models from '../database/models';
 import createUserService from '../services/UserServices';
 import generateToken from '../services/TokenService';

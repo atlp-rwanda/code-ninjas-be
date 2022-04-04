@@ -1,6 +1,6 @@
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
-import { before, describe, it } from 'mocha';
+import { afterEach, before, beforeEach, describe, it } from 'mocha';
 import app from '../src/app';
 import models from '../src/database/models';
 import checkUser from '../src/services/CheckUser';
