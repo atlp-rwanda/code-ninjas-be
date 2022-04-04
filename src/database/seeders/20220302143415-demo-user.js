@@ -7,6 +7,7 @@ module.exports = {
         email: 'example@example.com',
         userName: 'testUser1',
         password: 'password',
+        facebookId: '11111111113333',
         createdAt: new Date(),
         updatedAt: new Date(),
       },

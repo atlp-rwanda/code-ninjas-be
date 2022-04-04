@@ -4,6 +4,8 @@ export const user = {
   Password: 'Andelahfghfh',
   FirstName: 'JohnS',
   LastName: 'DoeS',
+  googleId: '123456789',
+  facebookId: '123456789',
 };
 export const user4 = {
   UserName: 'ke',

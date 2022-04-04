@@ -30,8 +30,7 @@ const options = {
       in: 'header',
     },
   },
-  // apis: ['./routes/*.js'],
-  // tags: [{}],
+
   paths: {
     '/api/auth/register': {
       post: {
@@ -58,6 +57,23 @@ const options = {
         responses: {
           200: {
             description: 'New User was created successfully',
+          },
+          400: {
+            description: 'Bad Request',
+          },
+        },
+      },
+    },
+    '/api/login': {
+      post: {
+        tags: ['Users'],
+        description:
+          '<a href="/api/auth/google">login with google</a> | <a href="/api/auth/facebook">login with facebook</a>',
+        parameters: [],
+        requestBody: {},
+        responses: {
+          200: {
+            description: 'Logged in successfully',
           },
           400: {
             description: 'Bad Request',
@@ -101,8 +117,6 @@ const options = {
     },
   },
 };
-
-// const specs = swaggerJsDoc(options);
 
 docrouter.use('/', serve, setup(options));
 
