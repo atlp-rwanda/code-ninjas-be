@@ -75,3 +75,11 @@ export const modelData = {
   userName: realUser2.UserName,
   password: realUser2.Password,
 };
+
+export const credentials = {
+  UserName: 'Johnny',
+  Email: 'vwlixyakslqavbonkw@kvhrw.com',
+  Password: 'Password@2022',
+  FirstName: 'John',
+  LastName: 'Does',
+};

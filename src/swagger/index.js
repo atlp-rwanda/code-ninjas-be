@@ -1,16 +1,10 @@
 import { Router } from 'express';
-import swaggerJsDoc from 'swagger-jsdoc';
 import { serve, setup } from 'swagger-ui-express';
-import response from './response';
 
 const docrouter = Router();
 
 const local = process.env.LOCAL_HOST;
 const heroku = process.env.DB_CONNECT;
-
-const paths = {
-  ...response,
-};
 
 const options = {
   openapi: '3.0.1',
@@ -22,19 +16,10 @@ const options = {
   },
   host: process.env === 'production' ? heroku : local,
   basePath: '/api',
-  securityDefinitions: {
-    bearerAuth: {
-      type: 'apiKey',
-      name: 'Authorization',
-      scheme: 'bearer',
-      in: 'header',
-    },
-  },
-
   paths: {
     '/api/auth/register': {
       post: {
-        tags: ['Users'],
+        tags: ['Authentication'],
         description: 'Create users',
         parameters: [],
         requestBody: {
@@ -64,9 +49,9 @@ const options = {
         },
       },
     },
-    '/api/login': {
+    '/api/auth/social/login': {
       post: {
-        tags: ['Users'],
+        tags: ['Authentication'],
         description:
           '<a href="/api/auth/google">login with google</a> | <a href="/api/auth/facebook">login with facebook</a>',
         parameters: [],
@@ -81,12 +66,55 @@ const options = {
         },
       },
     },
+    '/api/auth/login': {
+      post: {
+        tags: ['Authentication'],
+        description: 'Login to Barefoot Nomad',
+        parameters: [],
+        security: {
+          schema: {
+            $ref: '#/components/schemas/Security',
+          },
+          bearerAuth: [],
+        },
+        requestBody: {
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/User',
+              },
+              example: {
+                email: 'you-email@gmail.com',
+                password: 'your-password',
+              },
+            },
+          },
+          required: true,
+        },
+        responses: {
+          200: {
+            description: 'User login successfully',
+          },
+          400: {
+            description: 'Validation Error',
+          },
+          401: {
+            description: 'Invalid credentials',
+          },
+          404: {
+            description: 'User Not found',
+          },
+          500: {
+            description: 'Oh No! Error while logging user :( ',
+          },
+        },
+      },
+    },
   },
   components: {
     schemas: {
       User: {
         type: 'object',
-
         properties: {
           id: {
             type: 'string',
@@ -113,6 +141,12 @@ const options = {
             description: "User's Password",
           },
         },
+      },
+      Security: {
+        type: 'apiKey',
+        name: 'Authorization',
+        scheme: 'bearer',
+        in: 'header',
       },
     },
   },
