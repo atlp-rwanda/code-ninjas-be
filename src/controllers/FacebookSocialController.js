@@ -1,6 +1,7 @@
 import passport from 'passport';
 import models from '../database/models';
 import generateToken from '../services/TokenService';
+import RefreshToken from '../services/token';
 import '../services/googlePassport';
 
 const { User } = models;
@@ -28,12 +29,14 @@ class facebookController {
       const params = {
         user: { id: newUser.dataValues.id },
       };
-      const token = generateToken(params, secret, duration);
+      const accessToken = generateToken(params, secret, duration);
+      const refreshToken = RefreshToken(params);
 
-      res
-        .header('Authorization', token)
-        .status(200)
-        .json({ message: 'logged in successfully', token });
+      res.header('Authorization', accessToken).status(200).json({
+        message: 'logged in successfully',
+        accessToken,
+        refreshToken,
+      });
     } catch {
       res.status(500).send({ error: 'Oooops something went worng' });
     }
