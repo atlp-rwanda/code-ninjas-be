@@ -23,6 +23,7 @@ class googleController {
           lastName: name.givenName,
           userName: displayName,
           googleId: id,
+          isVerified: true,
           email,
         },
       });

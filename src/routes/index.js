@@ -7,6 +7,7 @@ import countryPaths from './country';
 import locationsRoutes from './location';
 import accommodationRoutes from './accommodation';
 import roomsRoutes from './rooms';
+import triprequest from './tripRequestRoute';
 
 const router = Router();
 
@@ -18,5 +19,6 @@ router.use('/countries', countryPaths);
 router.use('/locations', locationsRoutes);
 router.use('/accommodations', accommodationRoutes);
 router.use('/rooms', roomsRoutes);
+router.use('/trip', triprequest);
 
 export default router;

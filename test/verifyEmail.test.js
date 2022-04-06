@@ -9,98 +9,98 @@ import { realUser } from './mocks/index';
 import { userOne, setupDatabase, clearDatabase } from './fixtures/db';
 
 describe('Verify email', () => {
-  const sandbox = sinon.createSandbox();
+    const sandbox = sinon.createSandbox();
 
-  before(async () => {
-    await setupDatabase();
-    sandbox.spy(EmailController, 'send');
-  });
+    before(async() => {
+        await setupDatabase();
+        sandbox.spy(EmailController, 'send');
+    });
 
-  after(async () => {
-    await clearDatabase();
-    sandbox.restore();
-  });
+    after(async() => {
+        await clearDatabase();
+        sandbox.restore();
+    });
 
-  it('Should send a verification email to a user', async () => {
-    const res = await chai
-      .request(app)
-      .get(`/api/users/send/confirm/${userOne.email}`)
-      .send();
-    expect(res).to.have.status(200);
-    assert(EmailController.send.calledOnce);
-  });
+    it('Should send a verification email to a user', async() => {
+        const res = await chai
+            .request(app)
+            .get(`/api/users/send/confirm/${userOne.email}`)
+            .send();
+        expect(res).to.have.status(200);
+        assert(EmailController.send.calledOnce);
+    });
 
-  it('Should not send a verification email to a non-existent user', async () => {
-    const res = await chai
-      .request(app)
-      .get(`/api/users/send/confirm/${realUser.email}`)
-      .send();
+    it('Should not send a verification email to a non-existent user', async() => {
+        const res = await chai
+            .request(app)
+            .get(`/api/users/send/confirm/${realUser.email}`)
+            .send();
 
-    expect(res).to.have.status(404);
-    expect(res.body).to.have.property('error').equal('User not found');
-  });
+        expect(res).to.have.status(404);
+        expect(res.body).to.have.property('error').equal('User not found');
+    });
 
-  it('Should update the user as verified', async () => {
-    const { body } = await chai
-      .request(app)
-      .get(`/api/users/send/confirm/${userOne.email}`)
-      .send();
+    it('Should update the user as verified', async() => {
+        const { body } = await chai
+            .request(app)
+            .get(`/api/users/send/confirm/${userOne.email}`)
+            .send();
 
-    const res = await chai
-      .request(app)
-      .get(`/api/users/verify/${body.token}`)
-      .send();
+        const res = await chai
+            .request(app)
+            .get(`/api/users/verify/${body.token}`)
+            .send();
 
-    expect(res).to.have.status(200);
+        expect(res).to.have.status(200);
 
-    const user = await UserService.findUser({ email: userOne.email });
-    expect(user).to.have.property('isVerified', true);
-  });
+        const user = await UserService.findUser({ email: userOne.email });
+        expect(user).to.have.property('isVerified', true);
+    });
 
-  it('Should reject a verification request if token already used', async () => {
-    // sending email to user and creating token
-    const { body } = await chai
-      .request(app)
-      .get(`/api/users/send/confirm/${userOne.email}`)
-      .send();
+    it('Should reject a verification request if token already used', async() => {
+        // sending email to user and creating token
+        const { body } = await chai
+            .request(app)
+            .get(`/api/users/send/confirm/${userOne.email}`)
+            .send();
 
-    // first use of verification request
-    const firstRes = await chai
-      .request(app)
-      .get(`/api/users/verify/${body.token}`)
-      .send();
+        // first use of verification request
+        const firstRes = await chai
+            .request(app)
+            .get(`/api/users/verify/${body.token}`)
+            .send();
 
-    expect(firstRes).to.have.status(200);
-    expect(firstRes.body).to.have.property('message', 'Email verified!');
+        expect(firstRes).to.have.status(200);
+        expect(firstRes.body).to.have.property('message', 'Email verified!');
 
-    // second use of verification request
-    const secondRes = await chai
-      .request(app)
-      .get(`/api/users/verify/${body.token}`)
-      .send();
+        // second use of verification request
+        const secondRes = await chai
+            .request(app)
+            .get(`/api/users/verify/${body.token}`)
+            .send();
 
-    expect(secondRes).to.have.status(401);
-    expect(secondRes.body).to.have.property('error', 'Unauthorized');
+        expect(secondRes).to.have.status(401);
+        expect(secondRes.body).to.have.property('error', 'Unauthorized');
 
-    const user = await UserService.findUser({ email: userOne.email });
-    expect(user).to.have.property('isVerified', true);
-  });
+        const user = await UserService.findUser({ email: userOne.email });
+        expect(user).to.have.property('isVerified', true);
+    });
 
-  it('Should not verify for an invalid token', async () => {
-    const params = {
-      user: {
-        id: realUser.userId,
-      },
-    };
+    it('Should not verify for an invalid token', async() => {
+        const params = {
+            user: {
+                id: realUser.userId,
+            },
+        };
 
-    const secret = process.env.TOKEN_SECRET;
+        const secret = process.env.TOKEN_SECRET;
 
-    const duration = process.env.TOKEN_EXPIRE;
-    const token = generateToken(params, secret, duration);
-    const res = await chai
-      .request(app)
-      .get(`/api/users/verify/${token}`)
-      .send();
-    expect(res).to.have.status(401);
-  });
+        const duration = process.env.TOKEN_EXPIRE;
+        const token = generateToken(params, secret, duration);
+        const res = await chai
+            .request(app)
+            .get(`/api/users/verify/${token}`)
+            .send();
+        expect(res).to.have.status(401);
+    });
 });

@@ -17,6 +17,7 @@ import {
   realUserWithId,
   modelData,
 } from './mocks/index';
+import { setupDatabase, clearDatabase } from './fixtures/db';
 
 chai.should();
 
@@ -24,6 +25,7 @@ chai.use(chaiHttp);
 
 describe('POST REGISTER', () => {
   describe('POST /api/auth/register', () => {
+    before(setupDatabase);
     before(async () => {
       await UserService.createUser(dbInitUser);
     });
@@ -142,8 +144,6 @@ describe('POST REGISTER', () => {
       expect(res.body).to.be.a('object');
       expect(res.body).to.have.property('error').eql('email already exists');
     });
-    after(async () => {
-      await models.User.destroy({ where: {} });
-    });
+    after(clearDatabase);
   });
 });
