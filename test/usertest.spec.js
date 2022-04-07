@@ -125,7 +125,6 @@ describe('POST REGISTER', () => {
         .request(app)
         .post('/api/auth/register')
         .send(realUser);
-
       expect(res).to.have.status(200);
       expect(res.body).to.be.a('object');
       expect(res.body)
@@ -143,21 +142,8 @@ describe('POST REGISTER', () => {
       expect(res.body).to.be.a('object');
       expect(res.body).to.have.property('error').eql('email already exists');
     });
-
-    it('It Should Give an Error when an Email is Dummy', async () => {
-      const res = await chai
-        .request(app)
-        .post('/api/auth/register')
-        .send(dummyEmailUser);
-
-      expect(res).to.have.status(400);
-      expect(res.body).to.be.a('object');
-      expect(res.body)
-        .to.have.property('error')
-        .eql(`${dummyEmailUser.email} is not a valid Email`);
-    });
     after(async () => {
-      await models.User.destroy({ where: {}, truncate: true });
+      await models.User.destroy({ where: {} });
     });
   });
 });

@@ -1,4 +1,5 @@
 import Joi from 'joi';
+import { roleEntryValidation } from '../helpers/CheckUser';
 
 const userSchema = Joi.object({
   firstName: Joi.string()
@@ -60,6 +61,26 @@ class UserValidation {
       });
     }
     next();
+  };
+
+  static verifyRoles = (req, res, next) => {
+    try {
+      const value = roleEntryValidation.validate(req.body);
+      if (value.error) {
+        res.status(422).json({
+          message: value.error.details[0].message.replace(/["'`]+/g, ''),
+        });
+      } else {
+        next();
+      }
+    } catch (error) {
+      res.status(500).json({
+        message:
+          error.message ||
+          error.message.replace(/["'`]+/g, '') ||
+          'unexpected error occurred',
+      });
+    }
   };
 }
 

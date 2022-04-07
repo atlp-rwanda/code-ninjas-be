@@ -9,15 +9,17 @@
   "scripts": {
     "init-dir": "sequelize init",
     "migrate": "yarn sequelize-cli db:migrate",
-    "down": "yarn sequelize-cli db:migrate:undo",
+    "down": "yarn sequelize-cli db:migrate:undo:all",
     "seed": "yarn sequelize-cli db:seed:all",
     "unseed": "yarn sequelize-cli db:seed:undo:all",
+    "create:roles": "yarn sequelize db:seed --seed 20220411084040-Role.js",
+    "create:admin": "yarn run build && yarn create:roles && node lib/config/init.js",
     "build": "babel src -d lib",
-    "start": "yarn run build && cross-env NODE_ENV=production node lib/index.js",
-    "dev": "cross-env NODE_ENV=development nodemon --exec babel-node src/index.js",
+    "start": "yarn run build && cross-env NODE_ENV=production yarn migrate && NODE_ENV=production yarn create:admin && cross-env NODE_ENV=production node lib/index.js",
+    "dev": " cross-env NODE_ENV=development yarn migrate && cross-env NODE_ENV=development yarn create:admin && cross-env NODE_ENV=development nodemon --exec babel-node -r dotenv/config src/index.js",
     "lint": "eslint src/** test/** --fix",
     "prepare": "husky install",
-    "test": "yarn migrate --env test && cross-env NODE_ENV=test c8 mocha --timeout 100000 --exit --require @babel/register"
+    "test": "yarn migrate --env test && cross-env NODE_ENV=test c8 mocha --timeout 200000 --exit --require @babel/register"
   },
   "dependencies": {
     "@babel/cli": "^7.17.6",
@@ -57,6 +59,7 @@
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.17.0",
     "sequelize-cli": "^6.4.1",
+    "sequelize-replace-enum-postgres": "^1.6.0",
     "supertest": "^6.2.2",
     "swagger-jsdoc": "^6.1.0",
     "swagger-ui-express": "^4.3.0",

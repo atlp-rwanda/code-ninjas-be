@@ -65,7 +65,7 @@ export const dummyEmailUser = {
 
 export const realUser = {
   userName: 'kevinNew',
-  email: process.env.TEST_INIT_EMAIL,
+  email: process.env.TEST_REGISTER_EMAIL,
   password: 'Password@2022',
   firstName: 'JohnS',
   lastName: 'DoeS',
@@ -94,4 +94,31 @@ export const credentials = {
   password: 'Password@2022',
   firstName: 'John',
   lastName: 'Doe',
+};
+
+export const User = {
+  FirstName: 'JaneD',
+  LastName: 'DoeS',
+  Email: 'admin@admin.com',
+  UserName: 'DoeS',
+  Password: 'password',
+  RoleId: '4',
+};
+
+export const saveUser = {
+  firstName: 'JaneD',
+  lastName: 'DoeS',
+  email: 'itiswasp@gmail.com',
+  userName: 'DoeS',
+  password: 'Password@2022',
+};
+
+export const admin = {
+  email: 'admin@admin.com',
+  password: 'password',
+};
+
+export const data = {
+  RoleId: '3',
+  Email: 'newcheck@gmail.com',
 };

@@ -101,7 +101,4 @@ describe('Testing authentication routes', () => {
     expect(res.status).to.be.equal(200);
     expect(res.body).to.have.property('message', 'User logout successful');
   });
-  after(async () => {
-    await User.destroy({ where: {}, truncate: true });
-  });
 });
