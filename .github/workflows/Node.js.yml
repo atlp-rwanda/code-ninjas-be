@@ -37,9 +37,12 @@ jobs:
       CI: true
       TOKEN_SECRET: ${{ secrets.TOKEN_SECRET }}
       TOKEN_EXPIRE: ${{ secrets.TOKEN_EXPIRE}}
+      REFRESH_SECRET: ${{ secrets.REFRESH_SECRET }}
+      REFRESH_EXPIRE: ${{ secrets.REFRESH_EXPIRE }}
       DB_CONNECT: ${{ secrets.DB_CONNECT }}
       DEV_DB: ${{ secrets.DEV_DB }}
       TEST_DB: ${{ secrets.TEST_DB }}
+      REDIS_DB: ${{ secrets.REDIS_DB }}
       FB_CLIENT_ID: ${{secrets.FB_CLIENT_ID}}
       FB_CLIENT_SECRETE: ${{secrets.FB_CLIENT_SECRETE}}
       GOOGLE_CLIENT_ID: ${{secrets.GOOGLE_CLIENT_ID}}

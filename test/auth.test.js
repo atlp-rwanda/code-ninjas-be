@@ -72,6 +72,32 @@ describe('Testing authentication routes', () => {
     expect(res.status).to.be.equal(200);
     expect(res.body).to.have.property('message', 'User login successful :)');
   });
+  it('should check if a user is signed in.', async () => {
+    const res = await chai
+      .request(app)
+      .get('/api/auth/logout')
+      .set('Authorization', ' ');
+    expect(res.status).to.be.equal(401);
+    expect(res.body).to.have.property('message', 'Please login first!');
+  });
+  it('should logout a user.', async () => {
+    const Dummy = await chai
+      .request(app)
+      .post('/api/auth/register')
+      .send(credentials);
+    const { Email: email, Password: password } = credentials;
+    const user = await chai
+      .request(app)
+      .post('/api/auth/login')
+      .send({ email, password });
+    const { accessToken } = user.body.data;
+    const res = await chai
+      .request(app)
+      .get('/api/auth/logout')
+      .set('Authorization', `Bearer ${accessToken}`);
+    expect(res.status).to.be.equal(200);
+    expect(res.body).to.have.property('message', 'User logout successfully');
+  });
   after(async () => {
     await User.destroy({ where: {}, truncate: true });
   });

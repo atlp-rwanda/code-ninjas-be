@@ -43,7 +43,6 @@ describe('POST REGISTER', () => {
     });
 
     it('Validate Token Service', (done) => {
-      // create and Assign a token
       const params = {
         user: {
           id: realUser2.userId,

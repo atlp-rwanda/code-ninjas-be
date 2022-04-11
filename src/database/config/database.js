@@ -15,4 +15,5 @@ const dbase = new Sequelize(env.url, {
     },
   },
 });
+
 export default dbase;

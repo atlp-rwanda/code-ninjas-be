@@ -16,6 +16,11 @@ const options = {
   },
   host: process.env === 'production' ? heroku : local,
   basePath: '/api',
+  security: [
+    {
+      bearerAuth: [],
+    },
+  ],
   paths: {
     '/api/auth/register': {
       post: {
@@ -71,12 +76,7 @@ const options = {
         tags: ['Authentication'],
         description: 'Login to Barefoot Nomad',
         parameters: [],
-        security: {
-          schema: {
-            $ref: '#/components/schemas/Security',
-          },
-          bearerAuth: [],
-        },
+        security: [],
         requestBody: {
           content: {
             'application/json': {
@@ -106,6 +106,70 @@ const options = {
           },
           500: {
             description: 'Oh No! Error while logging user :( ',
+          },
+        },
+      },
+    },
+    '/api/auth/logout': {
+      get: {
+        tags: ['Authentication'],
+        description: 'Logout from Barefoot Nomad',
+        parameters: [],
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
+        requestBody: {},
+        responses: {
+          200: {
+            description: 'User logout successfully',
+          },
+          403: {
+            description: 'Please sign in first',
+          },
+          500: {
+            description: 'Unable to log out user',
+          },
+        },
+      },
+    },
+
+    '/api/auth/token': {
+      post: {
+        tags: ['Authentication'],
+        description: 'Generate new token',
+        parameters: [],
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
+        requestBody: {
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/User',
+              },
+              example: {
+                token: 'you-refresh-token',
+              },
+            },
+          },
+          required: true,
+        },
+        responses: {
+          200: {
+            description: 'Token creation successful',
+          },
+          401: {
+            description: 'Invalid reuest! Unauthorised user.',
+          },
+          403: {
+            description: 'Invalid request! Please sign in first',
+          },
+          500: {
+            description: 'Unable to log out user',
           },
         },
       },
@@ -142,11 +206,12 @@ const options = {
           },
         },
       },
-      Security: {
-        type: 'apiKey',
-        name: 'Authorization',
+    },
+    securitySchemes: {
+      bearerAuth: {
+        type: 'http',
         scheme: 'bearer',
-        in: 'header',
+        bearerFormat: 'JWT',
       },
     },
   },

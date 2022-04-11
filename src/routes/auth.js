@@ -3,6 +3,7 @@ import passport from 'passport';
 import UserController from '../controllers/user';
 import UserValidation from '../validations/UserValidation';
 import EmailValidation from '../middlewares/EmailValidation';
+import authMiddleware from '../middlewares/token';
 import googleController from '../controllers/GoogleSocialController';
 import facebookController from '../controllers/FacebookSocialController';
 import routeValidators from '../middlewares/validator';
@@ -11,7 +12,8 @@ import '../services/googlePassport';
 import '../services/facebookPassport';
 
 const { loginValidate } = routeValidators;
-const { login } = auth;
+const { login, logout, generateToken } = auth;
+const { verifyAccess, verifyRefresh } = authMiddleware;
 
 const router = Router();
 
@@ -43,5 +45,7 @@ router.get(
 router.get('/social/login', googleController.loginWithGoogle);
 
 router.route('/login').post(loginValidate, login);
+router.route('/logout').get(verifyAccess, logout);
+router.route('/token').post(verifyRefresh, generateToken);
 
 export default router;

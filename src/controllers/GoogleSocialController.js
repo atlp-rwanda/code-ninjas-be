@@ -1,6 +1,7 @@
 import passport from 'passport';
 import models from '../database/models';
 import generateToken from '../services/TokenService';
+import RefreshToken from '../services/token';
 import '../services/googlePassport';
 
 const { User } = models;
@@ -31,14 +32,16 @@ class googleController {
         expiresIn: process.env.TOKEN_EXPIRE,
       };
       const params = {
-        user: { id: newUser.dataValues.id },
+        user: { id: newUser.dataValues.id, email: newUser.dataValues.email },
       };
-      const token = generateToken(params, secret, duration);
+      const accessToken = generateToken(params, secret, duration);
+      const refreshToken = await RefreshToken(params);
 
-      res
-        .header('Authorization', token)
-        .status(200)
-        .json({ message: 'logged in successfully', token });
+      res.header('Authorization', accessToken).status(200).json({
+        message: 'logged in successfully',
+        accessToken,
+        refreshToken,
+      });
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
