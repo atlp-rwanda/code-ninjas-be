@@ -1,17 +1,19 @@
 import { Router } from 'express';
 import passport from 'passport';
-import UserController from '../controllers/user';
-import UserValidation from '../validations/UserValidation';
-import EmailValidation from '../middlewares/EmailValidation';
+import {
+  UserValidation,
+  EmailValidation,
+  LoginValidation,
+} from '../validations';
+import { verifyLogin } from '../middlewares';
 import authMiddleware from '../middlewares/token';
+import UserController from '../controllers/user';
 import googleController from '../controllers/GoogleSocialController';
 import facebookController from '../controllers/FacebookSocialController';
-import routeValidators from '../middlewares/validator';
 import auth from '../controllers/auth';
 import '../services/googlePassport';
 import '../services/facebookPassport';
 
-const { loginValidate } = routeValidators;
 const { login, logout, generateToken } = auth;
 const { verifyAccess, verifyRefresh } = authMiddleware;
 
@@ -44,8 +46,8 @@ router.get(
 
 router.get('/social/login', googleController.loginWithGoogle);
 
-router.route('/login').post(loginValidate, login);
-router.route('/logout').get(verifyAccess, logout);
-router.route('/token').post(verifyRefresh, generateToken);
+router.post('/login', LoginValidation.validateLogin, verifyLogin, login);
+router.get('/logout', verifyAccess, logout);
+router.post('/token', verifyRefresh, generateToken);
 
 export default router;

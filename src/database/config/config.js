@@ -1,4 +1,4 @@
-require('dotenv').config();
+import 'dotenv/config';
 
 export const development = {
   url: process.env.DEV_DB,

@@ -1,7 +1,3 @@
-export default (res, status, message, datas) => {
-  res.status(status).json({
-    success: true,
-    message,
-    data: datas,
-  });
+export default (res, status, body) => {
+  res.status(status).json(body);
 };

@@ -1,9 +1,5 @@
 import Sequelize from 'sequelize';
-import { config } from 'dotenv';
-
-const envConfigs = require('./config');
-
-config();
+import * as envConfigs from './config';
 
 const env = envConfigs[process.env.NODE_ENV] || envConfigs.development;
 

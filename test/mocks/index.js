@@ -7,79 +7,91 @@ export const user = {
   googleId: '123456789',
   facebookId: '123456789',
 };
-export const user4 = {
-  UserName: 'ke',
-  Email: 'itiswasp@gmail.com',
-  Password: 'Andelahfghfh',
-  FirstName: 'JohnS',
-  LastName: 'DoeS',
-};
-export const user5 = {
-  UserName: 'kevi',
-  Email: 'didas@andela.com',
-  Password: 'Andela@2022',
-  FirstName: 'JohnS',
-  LastName: 'DoeS',
-};
-export const user6 = {
-  UserName: 'kevi',
-  Email: 'itiswasp@gmail.com',
-  Password: 'Andelahfghfh',
-  FirstName: 'Jo',
-  LastName: 'DoeS',
-};
-export const user7 = {
-  UserName: 'kevi',
-  Email: 'itiswasp@gmail.com',
-  Password: 'Andelahfghfh',
-  FirstName: 'JohnS',
-  LastName: 'DS',
+
+export const invalidPasswordUser = {
+  userName: 'kevi',
+  email: 'example@email.com',
+  password: 'Andelahfghfh',
+  firstName: 'JohnS',
+  lastName: 'DoeS',
 };
 
-export const user2 = {
-  UserName: 'kevinNew',
-  Email: 'mugishaisrael18@gmail.com',
-  Password: 'Password@2022',
-  FirstName: 'JohnS',
-  LastName: 'DoeS',
+export const invalidUsernameUser = {
+  userName: 'ke',
+  email: 'example@email.com',
+  password: 'Andelahfghfh',
+  firstName: 'JohnS',
+  lastName: 'DoeS',
 };
-export const user3 = {
-  UserName: 'kevinNew',
-  Email: 'you@test.com',
-  Password: 'Password@2022',
-  FirstName: 'JohnS',
-  LastName: 'DoeS',
+
+export const invalidEmailUser = {
+  userName: 'kevi',
+  email: 'didas@andela',
+  password: 'Andela@2022',
+  firstName: 'JohnS',
+  lastName: 'DoeS',
+};
+
+export const invalidFirstNameUser = {
+  userName: 'kevi',
+  email: 'example@email.com',
+  password: 'Andelahfghfh',
+  firstName: 'Jo',
+  lastName: 'DoeS',
+};
+
+export const invalidLastNameUser = {
+  userName: 'kevi',
+  email: 'example@email.com',
+  password: 'Andelahfghfh',
+  firstName: 'JohnS',
+  lastName: 'DS',
+};
+
+export const dbInitUser = {
+  userName: 'kevinNew',
+  email: process.env.TEST_REAL_EMAIL,
+  password: 'Password@2022',
+  firstName: 'JohnS',
+  lastName: 'DoeS',
+};
+export const dummyEmailUser = {
+  userName: 'kevinNew',
+  email: 'you@test.com',
+  password: 'Password@2022',
+  firstName: 'JohnS',
+  lastName: 'DoeS',
 };
 
 export const realUser = {
-  UserName: 'kevinNew',
-  Email: 'demjinzwalvis2002@gmail.com',
-  Password: 'Password@2022',
-  FirstName: 'JohnS',
-  LastName: 'DoeS',
+  userName: 'kevinNew',
+  email: process.env.TEST_INIT_EMAIL,
+  password: 'Password@2022',
+  firstName: 'JohnS',
+  lastName: 'DoeS',
 };
 
-export const realUser2 = {
+export const realUserWithId = {
   userId: '1',
-  UserName: 'kevinNew',
-  Email: 'mugishaisrael18@gmail.com',
-  Password: 'Password@2022',
-  FirstName: 'JohnS',
-  LastName: 'DoeS',
+  userName: 'kevinNew',
+  email: process.env.TEST_REAL_EMAIL,
+  password: 'Password@2022',
+  firstName: 'JohnS',
+  lastName: 'DoeS',
 };
 
 export const modelData = {
-  firstName: realUser2.FirstName,
-  lastName: realUser2.LastName,
-  email: realUser2.Email,
-  userName: realUser2.UserName,
-  password: realUser2.Password,
+  firstName: realUserWithId.firstName,
+  lastName: realUserWithId.lastName,
+  email: realUserWithId.email,
+  userName: realUserWithId.userName,
+  password: realUserWithId.password,
 };
 
 export const credentials = {
-  UserName: 'Johnny',
-  Email: 'codeninjas6@gmail.com',
-  Password: 'Password@2022',
-  FirstName: 'John',
-  LastName: 'Does',
+  userName: 'Johnny',
+  email: process.env.TEST_INIT_EMAIL,
+  password: 'Password@2022',
+  firstName: 'John',
+  lastName: 'Doe',
 };

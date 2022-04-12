@@ -1,5 +1,6 @@
-import redis from '../database/config/redis.config';
+import redis from '../database/redis';
 import encryption from '../helpers/encryption';
+import ErrorResponse from '../utils/errorResponse';
 
 const { signRefresh } = encryption;
 const ref_duration = process.env.REFRESH_EXPIRE;
@@ -9,7 +10,10 @@ const generateRefreshToken = async (datas) => {
   const { id } = datas;
   await redis.get(id, async (err, data) => {
     if (err) {
-      return ErrorResponse(res, 500, `Unable to generate token ${err.message}`);
+      return ErrorResponse.internalServerError(
+        res,
+        `Unable to generate token ${err.message}`
+      );
     }
 
     await redis.set(id, JSON.stringify({ token: refreshToken }));

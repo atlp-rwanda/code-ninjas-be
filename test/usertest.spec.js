@@ -3,19 +3,18 @@ import chaiHttp from 'chai-http';
 import { before, describe, it } from 'mocha';
 import app from '../src/app';
 import models from '../src/database/models';
-import checkUser from '../src/services/CheckUser';
-import generateToken from '../src/services/TokenService';
-import createUserService from '../src/services/UserServices';
+import UserService from '../src/services/user.service';
+import { generateToken } from '../src/helpers/token';
 import {
-  user,
-  user4,
-  user5,
-  user6,
-  user7,
-  user2,
-  user3,
+  invalidPasswordUser,
+  invalidUsernameUser,
+  invalidEmailUser,
+  invalidFirstNameUser,
+  invalidLastNameUser,
+  dbInitUser,
+  dummyEmailUser,
   realUser,
-  realUser2,
+  realUserWithId,
   modelData,
 } from './mocks/index';
 
@@ -25,178 +24,140 @@ chai.use(chaiHttp);
 
 describe('POST REGISTER', () => {
   describe('POST /api/auth/register', () => {
-    before((done) => {
-      models.User.create({
-        firstName: user2.FirstName,
-        lastName: user2.LastName,
-        email: user2.Email,
-        userName: user2.UserName,
-        password: user2.Password,
-      }).then(() => {
-        done();
-      });
+    before(async () => {
+      await UserService.createUser(dbInitUser);
     });
 
-    it('Vaidate the Check Email Service', (done) => {
-      expect(checkUser(user2.Email)).to.be.a('promise');
-      done();
+    it('Vaidate the Check Email Service', async () => {
+      expect(UserService.checkUser(dbInitUser.email)).to.be.a('promise');
     });
 
-    it('Validate Token Service', (done) => {
+    it('Validate Token Service', async () => {
+      // create and Assign a token
       const params = {
         user: {
-          id: realUser2.userId,
-          username: realUser2.UserName,
-          email: realUser2.Email,
+          id: realUserWithId.userId,
+          username: realUserWithId.userName,
+          email: realUserWithId.email,
         },
       };
 
       const secret = process.env.TOKEN_SECRET;
 
-      const duration = {
-        expiresIn: process.env.TOKEN_EXPIRE,
-      };
+      const duration = process.env.TOKEN_EXPIRE;
 
       expect(generateToken(params, secret, duration)).to.be.a('string');
-      done();
     });
 
-    it('Validate Create User Service', (done) => {
-      expect(createUserService(modelData)).to.be.a('promise');
-      done();
+    it('Validate Create User Service', async () => {
+      expect(UserService.createUser(modelData)).to.be.a('promise');
     });
 
-    it('It Give an error on Validation of Password', (done) => {
-      chai
+    it('It Give an error on Validation of Password', async () => {
+      const res = await chai
         .request(app)
         .post('/api/auth/register')
-        .send(user)
-        .end((err, res) => {
-          res.should.have.status(400);
-          res.body.should.be.a('object');
-          res.body.should.have
-            .property('message')
-            .eql(
-              'Password must contain atleast a number, a special character, an upper-case letter and longer than 8 characters'
-            );
-          done();
-        })
-        .timeout(100000);
+        .send(invalidPasswordUser);
+
+      expect(res).to.have.status(422);
+      expect(res.body).to.be.a('object');
+      expect(res.body)
+        .to.have.property('error')
+        .eql(
+          'password must contain at least a number, a special character, an upper-case letter and longer than 8 characters'
+        );
     });
 
-    it('It Give an error on Validation of UserName', (done) => {
-      chai
+    it('It Give an error on Validation of UserName', async () => {
+      const res = await chai
         .request(app)
         .post('/api/auth/register')
-        .send(user4)
-        .end((err, res) => {
-          res.should.have.status(400);
-          res.body.should.be.a('object');
-          res.body.should.have
-            .property('message')
-            .eql('UserName length must be at least 4 characters long');
-          done();
-        })
-        .timeout(100000);
+        .send(invalidUsernameUser);
+
+      expect(res).to.have.status(422);
+      expect(res.body).to.be.a('object');
+      expect(res.body)
+        .to.have.property('error')
+        .eql('userName length must be at least 4 characters long');
     });
 
-    it('It Give an error on Validation of Email', (done) => {
-      chai
+    it('It Give an error on Validation of Email', async () => {
+      const res = await chai
         .request(app)
         .post('/api/auth/register')
-        .send(user5)
-        .end((err, res) => {
-          res.should.have.status(400);
-          res.body.should.be.a('object');
-          res.body.should.have
-            .property('message')
-            .eql(`${user.Email} is not a valid Email`);
-          done();
-        })
-        .timeout(100000);
-    });
-    it('It Give an error on Validation of FirstName', (done) => {
-      chai
-        .request(app)
-        .post('/api/auth/register')
-        .send(user6)
-        .end((err, res) => {
-          res.should.have.status(400);
-          res.body.should.be.a('object');
-          res.body.should.have
-            .property('message')
-            .eql('FirstName length must be at least 4 characters long');
-          done();
-        })
-        .timeout(100000);
+        .send(invalidEmailUser);
+
+      expect(res).to.have.status(422);
+      expect(res.body).to.be.a('object');
+      expect(res.body)
+        .to.have.property('error')
+        .eql(`email must be a valid email`);
     });
 
-    it('It Give an error on Validation of LastName', (done) => {
-      chai
+    it('It Give an error on Validation of FirstName', async () => {
+      const res = await chai
         .request(app)
         .post('/api/auth/register')
-        .send(user7)
-        .end((err, res) => {
-          res.should.have.status(400);
-          res.body.should.be.a('object');
-          res.body.should.have
-            .property('message')
-            .eql('LastName length must be at least 4 characters long');
-          done();
-        })
-        .timeout(100000);
+        .send(invalidFirstNameUser);
+
+      expect(res).to.have.status(422);
+      expect(res.body).to.be.a('object');
+      expect(res.body)
+        .to.have.property('error')
+        .eql('firstName length must be at least 3 characters long');
     });
 
-    it('It Should Register a User Successfully', (done) => {
-      chai
+    it('It Give an error on Validation of LastName', async () => {
+      const res = await chai
         .request(app)
         .post('/api/auth/register')
-        .send(realUser)
-        .end((err, res) => {
-          res.should.have.status(200);
-          res.body.should.be.a('object');
-          res.body.should.have
-            .property('message')
-            .eql('User created successfully');
+        .send(invalidLastNameUser);
 
-          done();
-        })
-        .timeout(100000);
+      expect(res).to.have.status(422);
+      expect(res.body).to.be.a('object');
+      expect(res.body)
+        .to.have.property('error')
+        .eql('lastName length must be at least 3 characters long');
     });
 
-    it('It Should Give an Error when user exists', (done) => {
-      chai
+    it('It Should Register a User Successfully', async () => {
+      const res = await chai
         .request(app)
         .post('/api/auth/register')
-        .send(user2)
-        .end((err, res) => {
-          res.should.have.status(400);
-          res.body.should.be.a('object');
-          res.body.should.have.property('message').eql('Email already Exists');
-          done();
-        })
-        .timeout(100000);
+        .send(realUser);
+
+      expect(res).to.have.status(200);
+      expect(res.body).to.be.a('object');
+      expect(res.body)
+        .to.have.property('message')
+        .eql('User created successfully');
     });
 
-    it('It Should Give an Error when an Email is Dummy', (done) => {
-      chai
+    it('It Should Give an Error when user exists', async () => {
+      const res = await chai
         .request(app)
         .post('/api/auth/register')
-        .send(user3)
-        .end((err, res) => {
-          res.should.have.status(400);
-          res.body.should.be.a('object');
-          res.body.should.have
-            .property('message')
-            .eql(`${user3.Email} is not a valid Email`);
-          done();
-        })
-        .timeout(100000);
+        .send(dbInitUser);
+
+      expect(res).to.have.status(409);
+      expect(res.body).to.be.a('object');
+      expect(res.body).to.have.property('error').eql('email already exists');
     });
-    after((done) => {
-      models.User.destroy({ where: {}, truncate: true }).then(() => {
-        done();
-      });
+
+    it('It Should Give an Error when an Email is Dummy', async () => {
+      const res = await chai
+        .request(app)
+        .post('/api/auth/register')
+        .send(dummyEmailUser);
+
+      expect(res).to.have.status(400);
+      expect(res.body).to.be.a('object');
+      expect(res.body)
+        .to.have.property('error')
+        .eql(`${dummyEmailUser.email} is not a valid Email`);
+    });
+    after(async () => {
+      await models.User.destroy({ where: {}, truncate: true });
     });
   });
 });
