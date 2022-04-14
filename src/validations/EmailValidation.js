@@ -5,9 +5,9 @@ const emailSchema = Joi.string().required().email();
 
 class EmailValidation {
   static validateEmail = async (req, res, next) => {
-    const { error } = emailSchema.validate(req.params.email);
+    const { error } = emailSchema.validate(req.params.email || req.body.email);
     if (error) {
-      return res.status(400).json({
+      return res.status(422).json({
         error: error.details[0].message.replace(/["'`]+/g, ''),
       });
     }

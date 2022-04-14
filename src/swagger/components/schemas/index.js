@@ -1,12 +1,14 @@
+import userProfileSchema from './profile';
 import userSchema from './user';
 import loginSchema from './login';
-import securitySchema from './security';
+import newPasswordSchema from './newPassword';
 
 const schemas = {
   schemas: {
+    ...userProfileSchema,
     ...userSchema,
     ...loginSchema,
-    ...securitySchema,
+    ...newPasswordSchema,
   },
 };
 

@@ -90,7 +90,7 @@ export const modelData = {
 
 export const credentials = {
   userName: 'Johnny',
-  email: process.env.TEST_INIT_EMAIL,
+  email: process.env.TEST_REAL_EMAIL,
   password: 'Password@2022',
   firstName: 'John',
   lastName: 'Doe',

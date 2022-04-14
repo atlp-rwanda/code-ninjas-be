@@ -5,8 +5,8 @@ import usersRoutes from './user';
 
 const router = Router();
 
+router.use('/auth', authRoutes);
 router.use('/docs', docs);
 router.use('/users', usersRoutes);
-router.use('/auth', authRoutes);
 
 export default router;

@@ -2,14 +2,7 @@ import { Model } from 'sequelize';
 
 export default (sequelize, DataTypes) => {
   class User extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
-    }
+    static associate() {}
   }
   User.init(
     {
@@ -24,6 +17,21 @@ export default (sequelize, DataTypes) => {
       isVerified: DataTypes.BOOLEAN,
       facebookId: DataTypes.STRING,
       googleId: DataTypes.STRING,
+      age: DataTypes.INTEGER,
+      gender: DataTypes.ENUM(['male', 'female', 'prefer not say']),
+      dob: DataTypes.DATEONLY,
+      nationality: DataTypes.STRING,
+      department: DataTypes.STRING,
+      preferredLanguage: DataTypes.STRING,
+      preferredCurrency: DataTypes.STRING,
+      address: DataTypes.STRING,
+      lineManager: DataTypes.STRING,
+      phoneNumber: DataTypes.STRING,
+      maritalStatus: DataTypes.ENUM(['single', 'married', 'widowed']),
+      isComplete: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
     },
     {
       sequelize,

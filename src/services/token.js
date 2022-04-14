@@ -7,7 +7,7 @@ const ref_duration = process.env.REFRESH_EXPIRE;
 
 const generateRefreshToken = async (datas) => {
   const refreshToken = await signRefresh(datas, ref_duration);
-  const { id } = datas;
+  const { id } = datas.user;
   await redis.get(id, async (err, data) => {
     if (err) {
       return ErrorResponse.internalServerError(

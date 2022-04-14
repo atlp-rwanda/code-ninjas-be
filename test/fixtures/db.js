@@ -1,11 +1,13 @@
 import { User } from '../../src/database/models';
 import redisClient from '../../src/database/redis';
+import Protection from '../../src/helpers/encryption';
 
+const userOnePassword = 'JohnDoe@2022';
 const userOne = {
   firstName: 'John',
   lastName: 'Doe',
   email: 'john.doe@email.com',
-  password: 'JohnDoe@2022',
+  password: Protection.hashPassword(userOnePassword),
   userName: 'AnonymousJoe',
   createdAt: new Date(),
   updatedAt: new Date(),
@@ -28,4 +30,4 @@ const clearDatabase = async () => {
   });
 };
 
-export { userOne, setupDatabase, clearDatabase };
+export { userOne, userOnePassword, setupDatabase, clearDatabase };

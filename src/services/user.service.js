@@ -28,6 +28,11 @@ class UserService {
     }
     return user;
   };
+
+  static async updateUser(user, param) {
+    const updateduser = await user.update(param);
+    return updateduser;
+  }
 }
 
 export default UserService;
