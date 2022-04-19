@@ -1,10 +1,9 @@
-import { v4 as uuidv4 } from 'uuid';
 import UserService from '../services/user.service';
 import redis from '../database/redis';
+import ErrorResponse from '../utils/errorResponse';
 import Protection from '../helpers/encryption';
 import { generateToken, verifyToken } from '../helpers/token';
-import EmailHelper from '../helpers/email';
-import confirmTemplate from '../helpers/email/templates';
+import EmailController from './email';
 
 const { createUser, checkUser, findUser } = UserService;
 
@@ -41,7 +40,7 @@ class UserController {
       const token = generateToken(params, secret, duration);
 
       // Send a confirmation email
-      const email = await this.sendConfirmationEmail(user.email);
+      const email = await EmailController.sendConfirmationEmail(user.email);
 
       res.header('Authorization', `Bearer ${token}`);
       res.status(200).json({
@@ -54,65 +53,6 @@ class UserController {
         return res.status(409).json({ error: 'email already exists' });
       }
       res.status(500).json({ error: error.message });
-    }
-  };
-
-  static sendConfirmationEmail = async (email) => {
-    const user = await findUser({ email });
-
-    const secret = process.env.TOKEN_SECRET;
-    const duration = parseInt(process.env.EMAIL_TOKEN_EXPIRE, 10);
-
-    // Cache the verification token under a generated uuid key
-    const tokenId = uuidv4();
-    const data = { user: { id: user.id }, tokenId };
-    const token = generateToken(data, secret, duration);
-
-    await redis.set(
-      `${process.env.NODE_ENV}:${tokenId}`,
-      token,
-      'EX',
-      process.env.EMAIL_TOKEN_EXPIRE,
-      (err, result) => {
-        if (err) {
-          throw new Error(error.message);
-        }
-      }
-    );
-
-    // initiate email sender auth
-    const authClient = {
-      clientId: process.env.GOOGLE_MAIL_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_MAIL_CLIENT_SECRET,
-      redirectUri: process.env.GOOGLE_MAIL_REDIRECT_URI,
-      refreshToken: process.env.GOOGLE_MAIL_REFRESH_TOKEN,
-    };
-
-    const result = await EmailHelper.sendEmail(
-      authClient,
-      process.env.EMAIL,
-      email,
-      confirmTemplate(`${process.env.HOST}/api/users/verify/${token}`)
-    );
-
-    if (result.envelope) {
-      return { message: 'Confirm email', token, envelope: result.envelope };
-    }
-    return result;
-  };
-
-  static resendConfirmationEmail = async (req, res) => {
-    try {
-      await findUser({ email: req.params.email });
-
-      const email = await this.sendConfirmationEmail(req.params.email);
-
-      if (!email.envelope) {
-        return res.status(502).json({ error: 'Bad Gateway' });
-      }
-      res.json(email);
-    } catch (error) {
-      res.status(404).json({ error: error.message });
     }
   };
 
@@ -149,5 +89,25 @@ class UserController {
       return res.status(401).json({ error: error.message });
     }
   };
+
+  static inputNewPassword = async (req, res) => {
+    try {
+      return res.json({ message: 'Ready for new password input' });
+    } catch (error) {
+      return ErrorResponse.internalServerError(res, error.message);
+    }
+  };
+
+  static setNewPassword = async (req, res) => {
+    try {
+      const { user } = req;
+      const password = Protection.hashPassword(req.body.password);
+      await user.update({ password });
+      res.json({ message: 'Password modified successfully!' });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  };
 }
+
 export default UserController;

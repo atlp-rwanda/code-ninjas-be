@@ -1,7 +1,7 @@
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import { assert } from '@sinonjs/referee';
-import UserController from '../src/controllers/user';
+import EmailController from '../src/controllers/email';
 import app from '../src/app';
 import UserService from '../src/services/user.service';
 import { generateToken } from '../src/helpers/token';
@@ -13,7 +13,7 @@ describe('Verify email', () => {
 
   beforeEach(async () => {
     await setupDatabase();
-    sandbox.spy(UserController, 'sendConfirmationEmail');
+    sandbox.spy(EmailController, 'sendConfirmationEmail');
   });
 
   afterEach(async () => {
@@ -27,7 +27,7 @@ describe('Verify email', () => {
       .get(`/api/users/send/confirm/${userOne.email}`)
       .send();
     expect(res).to.have.status(200);
-    assert(UserController.sendConfirmationEmail.calledOnce);
+    assert(EmailController.sendConfirmationEmail.calledOnce);
     assert.equals(userOne.email, res.body.envelope.to[0]);
   });
 

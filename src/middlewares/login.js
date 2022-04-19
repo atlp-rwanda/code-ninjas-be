@@ -18,6 +18,7 @@ const verifyLogin = async (req, res, next) => {
       return ErrorResponse.forbiddenError(res, 'Unverified account');
     }
 
+    req.user = foundUser;
     next();
   } catch (error) {
     if (error.message === 'User not found') {

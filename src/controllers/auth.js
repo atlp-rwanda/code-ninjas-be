@@ -13,14 +13,8 @@ const { signToken, checkPassword } = encryption;
 class Auth {
   static async login(req, res, next) {
     try {
-      const { email, password } = req.body;
+      const foundUser = req.user;
 
-      const foundUser = await findUser({ email });
-
-      const isMatch = checkPassword(password, foundUser.password);
-      if (!isMatch) {
-        return ErrorResponse.notFoundError(res, 'Invalid credentials');
-      }
       const user = { id: foundUser.id, email: foundUser.email };
       const accessToken = await signToken({ user }, duration);
       const refreshToken = await generateRefresh(user);
@@ -30,7 +24,7 @@ class Auth {
         refreshToken,
       });
     } catch (err) {
-      return next(new ErrorResponse.notFoundError(res, 'Invalid credentials'));
+      return ErrorResponse.internalServerError(res, err.message);
     }
   }
 
@@ -50,11 +44,9 @@ class Auth {
         }
       );
     } catch (err) {
-      return next(
-        new ErrorResponse.internalServerError(
-          res,
-          'Oops! Error while creating token'
-        )
+      return ErrorResponse.internalServerError(
+        res,
+        'Oops! Error while creating token'
       );
     }
   };
@@ -70,11 +62,9 @@ class Auth {
 
       return successRes(res, 200, { message: 'User logout successfully' });
     } catch (error) {
-      return next(
-        new ErrorResponse.internalServerError(
-          res,
-          `Unable to log out user!! ${error}`
-        )
+      return ErrorResponse.internalServerError(
+        res,
+        `Unable to log out user!! ${error.message}`
       );
     }
   }

@@ -37,4 +37,14 @@ const confirmTemplate = (url) => {
   };
 };
 
-export default confirmTemplate;
+const resetPasswordTemplate = (name, url) => {
+  const body = `<h1>Hello, ${name}</h1>
+                <p>Click on the link below to reset your passowrd</p>
+                <a href=${url}><button>Reset Password</button></a>`;
+  return {
+    subject: 'Barefoot Nomad Password Reset',
+    html: baseHTML(body),
+  };
+};
+
+export { confirmTemplate, resetPasswordTemplate };
