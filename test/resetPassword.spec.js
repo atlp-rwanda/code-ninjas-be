@@ -55,7 +55,7 @@ describe('Reset Password', () => {
       .send({ email: userOne.email });
     const res = await chai
       .request(app)
-      .get(`/api/users/${user.id}/reset-password/${body.token}`)
+      .get(`/api/users/reset-password/${body.token}`)
       .send();
     expect(res.status).to.be.equal(200);
     expect(res.body).to.have.property(
@@ -73,7 +73,7 @@ describe('Reset Password', () => {
       .send({ email: userOne.email });
     const res = await chai
       .request(app)
-      .post(`/api/users/${user.id}/reset-password/${body.token}`)
+      .post(`/api/users/reset-password/${body.token}`)
       .send({
         password: newPassword,
         confirmPassword: newPassword,
@@ -96,7 +96,7 @@ describe('Reset Password', () => {
     const newPassword = '82@Z_GHhxQEm6iA';
     const firstResetResponse = await chai
       .request(app)
-      .post(`/api/users/${user.id}/reset-password/${body.token}`)
+      .post(`/api/users/reset-password/${body.token}`)
       .send({
         password: newPassword,
         confirmPassword: newPassword,
@@ -105,23 +105,23 @@ describe('Reset Password', () => {
 
     const getResetSecondResponse = await chai
       .request(app)
-      .get(`/api/users/${user.id}/reset-password/${body.token}`)
+      .get(`/api/users/reset-password/${body.token}`)
       .send();
     expect(getResetSecondResponse.status).to.be.equal(401);
     expect(getResetSecondResponse.body).to.have.property(
       'error',
-      'invalid signature'
+      'Unauthorized'
     );
 
     const anotherPassword = 'NewPassword@2022';
     const postResetSecondResponse = await chai
       .request(app)
-      .post(`/api/users/${user.id}/reset-password/${body.token}`)
+      .post(`/api/users/reset-password/${body.token}`)
       .send({ password: anotherPassword, confirmPassword: anotherPassword });
     expect(postResetSecondResponse.status).to.be.equal(401);
     expect(postResetSecondResponse.body).to.have.property(
       'error',
-      'invalid signature'
+      'Unauthorized'
     );
   });
 
@@ -134,7 +134,7 @@ describe('Reset Password', () => {
       .send({ email: userOne.email });
     const res = await chai
       .request(app)
-      .post(`/api/users/${user.id}/reset-password/${body.token}`)
+      .post(`/api/users/reset-password/${body.token}`)
       .send({
         password: newPassword,
         confirmPassword: newPassword,
@@ -154,7 +154,7 @@ describe('Reset Password', () => {
       .send({ email: userOne.email });
     const res = await chai
       .request(app)
-      .post(`/api/users/${user.id}/reset-password/${body.token}`)
+      .post(`/api/users/reset-password/${body.token}`)
       .send({
         password: 'NewP@ssw0rd',
         confirmPassword: 'NewP@ssw0rd__',
@@ -171,7 +171,7 @@ describe('Reset Password', () => {
       .send({ email: userOne.email });
     const res = await chai
       .request(app)
-      .post(`/api/users/${user.id}/reset-password/${body.token}`)
+      .post(`/api/users/reset-password/${body.token}`)
       .send({
         password: userOnePassword,
         confirmPassword: userOnePassword,

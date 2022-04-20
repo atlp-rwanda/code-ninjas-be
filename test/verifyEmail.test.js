@@ -13,7 +13,7 @@ describe('Verify email', () => {
 
   beforeEach(async () => {
     await setupDatabase();
-    sandbox.spy(EmailController, 'sendConfirmationEmail');
+    sandbox.spy(EmailController, 'send');
   });
 
   afterEach(async () => {
@@ -27,8 +27,7 @@ describe('Verify email', () => {
       .get(`/api/users/send/confirm/${userOne.email}`)
       .send();
     expect(res).to.have.status(200);
-    assert(EmailController.sendConfirmationEmail.calledOnce);
-    assert.equals(userOne.email, res.body.envelope.to[0]);
+    assert(EmailController.send.calledOnce);
   });
 
   it('Should not send a verification email to a non-existent user', async () => {

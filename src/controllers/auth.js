@@ -1,14 +1,10 @@
 import redisClient from '../database/redis';
-import generateRefresh from '../services/token';
-import UserService from '../services/user.service';
 import successRes from '../utils/successResponse';
 import ErrorResponse from '../utils/errorResponse';
-import encryption from '../helpers/encryption';
+import { cacheToken, getToken } from '../helpers/token';
 
-const duration = process.env.TOKEN_EXPIRE;
-
-const { findUser } = UserService;
-const { signToken, checkPassword } = encryption;
+const duration = parseInt(process.env.TOKEN_EXPIRE, 10);
+const refreshDuration = parseInt(process.env.TOKEN_EXPIRE, 10);
 
 class Auth {
   static async login(req, res, next) {
@@ -16,13 +12,25 @@ class Auth {
       const foundUser = req.user;
 
       const user = { id: foundUser.id, email: foundUser.email };
-      const accessToken = await signToken({ user }, duration);
-      const refreshToken = await generateRefresh(user);
-      return successRes(res.header('Authorization', accessToken), 200, {
-        message: 'User login successful :)',
-        accessToken,
-        refreshToken,
-      });
+
+      const accessTokenObject = getToken(user, duration);
+      accessTokenObject.duration = duration;
+
+      await cacheToken({ user, code: 'access' }, accessTokenObject);
+
+      const refreshTokenObject = getToken(user, refreshDuration);
+      refreshTokenObject.duration = refreshDuration;
+      await cacheToken({ user, code: 'refresh' }, refreshTokenObject);
+
+      return successRes(
+        res.header('Authorization', `Bearer ${accessTokenObject.token}`),
+        200,
+        {
+          message: 'User login successful :)',
+          accessToken: accessTokenObject.token,
+          refreshToken: refreshTokenObject.token,
+        }
+      );
     } catch (err) {
       return ErrorResponse.internalServerError(res, err.message);
     }
@@ -31,16 +39,28 @@ class Auth {
   static generateToken = async (req, res, next) => {
     try {
       const { id, email } = req.user;
+      const { tokenId, refreshTokenId } = req;
       const user = { id, email };
-      const accessToken = await signToken({ user }, duration);
-      const refreshToken = await generateRefresh(user);
+
+      const accessTokenObject = getToken(user, duration, tokenId);
+      accessTokenObject.duration = duration;
+      await cacheToken({ user, code: 'access' }, accessTokenObject);
+
+      const refreshTokenObject = getToken(
+        user,
+        refreshDuration,
+        refreshTokenId
+      );
+      refreshTokenObject.duration = refreshDuration;
+      await cacheToken({ user, code: 'refresh' }, refreshTokenObject);
+
       return successRes(
-        res.header('Authorization', `Bearer ${accessToken}`),
+        res.header('Authorization', `Bearer ${accessTokenObject.token}`),
         200,
-        'Token creation successful :)',
         {
-          accessToken,
-          refreshToken,
+          message: 'Token creation successful :)',
+          accessToken: accessTokenObject.token,
+          refreshToken: refreshTokenObject.token,
         }
       );
     } catch (err) {
@@ -53,14 +73,13 @@ class Auth {
 
   static async logout(req, res, next) {
     try {
-      const decoded = req.user;
-      await redisClient.del(decoded.toString());
+      const { tokenId, user } = req;
 
-      const { id } = decoded;
-      const { token } = req;
-      await redisClient.set(`Blacklisted_${id}`, token);
+      await redisClient.del(
+        `${process.env.NODE_ENV}:user-${user.id}-access-${tokenId}`
+      );
 
-      return successRes(res, 200, { message: 'User logout successfully' });
+      return successRes(res, 200, { message: 'User logout successful' });
     } catch (error) {
       return ErrorResponse.internalServerError(
         res,

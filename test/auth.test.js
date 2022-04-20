@@ -85,7 +85,7 @@ describe('Testing authentication routes', () => {
       .get('/api/auth/logout')
       .set('Authorization', ' ');
     expect(res.status).to.be.equal(401);
-    expect(res.body).to.have.property('error', 'Please login first!');
+    expect(res.body).to.have.property('error', 'Access denied');
   });
   it('should logout a user.', async () => {
     const { email, password } = credentials;
@@ -99,7 +99,7 @@ describe('Testing authentication routes', () => {
       .get('/api/auth/logout')
       .set('Authorization', `Bearer ${accessToken}`);
     expect(res.status).to.be.equal(200);
-    expect(res.body).to.have.property('message', 'User logout successfully');
+    expect(res.body).to.have.property('message', 'User logout successful');
   });
   after(async () => {
     await User.destroy({ where: {}, truncate: true });

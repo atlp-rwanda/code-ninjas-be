@@ -22,6 +22,10 @@ class ErrorResponse {
   static internalServerError = (res, error = 'Internal sever error') => {
     res.status(500).json({ error });
   };
+
+  static badGatewayError = (res, error = 'Gateway error') => {
+    res.status(502).json({ error });
+  };
 }
 
 export default ErrorResponse;
