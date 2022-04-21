@@ -1,103 +1,106 @@
-import { v4 as uuidv4 } from 'uuid';
 import EmailHelper from '../helpers/email';
 import {
   confirmTemplate,
   resetPasswordTemplate,
 } from '../helpers/email/templates';
 import UserService from '../services/user.service';
-import redis from '../database/redis';
-import { generateToken } from '../helpers/token';
+import { cacheToken, getToken } from '../helpers/token';
 import ErrorResponse from '../utils/errorResponse';
+import { getTemplate } from '../helpers/email/config';
 
 const { findUser } = UserService;
 
+// initiate default email sender auth
+const authClient = {
+  clientId: process.env.GOOGLE_MAIL_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_MAIL_CLIENT_SECRET,
+  redirectUri: process.env.GOOGLE_MAIL_REDIRECT_URI,
+  refreshToken: process.env.GOOGLE_MAIL_REFRESH_TOKEN,
+  email: process.env.EMAIL,
+};
+
+const duration = parseInt(process.env.EMAIL_TOKEN_EXPIRE, 10);
+
 class EmailController {
-  static sendConfirmationEmail = async (email) => {
-    const user = await findUser({ email });
-
-    const secret = process.env.TOKEN_SECRET;
-    const duration = parseInt(process.env.EMAIL_TOKEN_EXPIRE, 10);
-
-    // Cache the verification token under a generated uuid key
-    const tokenId = uuidv4();
-    const data = { user: { id: user.id }, tokenId };
-    const token = generateToken(data, secret, duration);
-
-    await redis.set(
-      `${process.env.NODE_ENV}:${tokenId}`,
-      token,
-      'EX',
-      process.env.EMAIL_TOKEN_EXPIRE,
-      (err, result) => {
-        if (err) {
-          return new Error(error.message);
-        }
-      }
-    );
-
-    // initiate email sender auth
-    const authClient = {
-      clientId: process.env.GOOGLE_MAIL_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_MAIL_CLIENT_SECRET,
-      redirectUri: process.env.GOOGLE_MAIL_REDIRECT_URI,
-      refreshToken: process.env.GOOGLE_MAIL_REFRESH_TOKEN,
-    };
-
+  static send = async (email, token, template, senderAuth = authClient) => {
     const result = await EmailHelper.sendEmail(
-      authClient,
-      process.env.EMAIL,
+      senderAuth,
       email,
-      confirmTemplate(`${process.env.HOST}/api/users/verify/${token}`)
+      getTemplate(template)
     );
 
     if (result.envelope) {
-      return { message: 'Confirm email', token, envelope: result.envelope };
+      return { token };
     }
     return result;
   };
 
   static resendConfirmationEmail = async (req, res) => {
     try {
-      await findUser({ email: req.params.email });
+      const user = await findUser({ email: req.params.email });
 
-      const email = await this.sendConfirmationEmail(req.params.email);
+      const userCode = {
+        user: { id: user.id },
+        code: 'verify',
+      };
 
-      if (!email.envelope) {
-        return res.status(502).json({ error: 'Bad Gateway' });
+      const tokenObject = getToken(
+        { id: user.id, email: user.email },
+        duration
+      );
+      tokenObject.duration = duration;
+
+      await cacheToken(userCode, tokenObject);
+
+      const email = await this.send(
+        user.email,
+        tokenObject.token,
+        confirmTemplate(
+          `${process.env.HOST}/api/users/verify/${tokenObject.token}`
+        )
+      );
+
+      if (!email.token) {
+        return ErrorResponse.badGatewayError(res, email.message);
       }
-      res.json(email);
+      res.json({ message: 'Confirm email', token: email.token });
     } catch (error) {
-      res.status(404).json({ error: error.message });
+      if (error.message === 'User not found') {
+        return ErrorResponse.notFoundError(res, error.message);
+      }
+      return ErrorResponse.internalServerError(res, error.message);
     }
   };
 
   static sendResetPasswordEmail = async (req, res) => {
     try {
-      const user = await UserService.findUser({ email: req.body.email });
+      const user = await findUser({ email: req.body.email });
 
-      const payload = { user: { id: user.id } };
-      const secret = process.env.TOKEN_SECRET + user.password;
-      const duration = parseInt(process.env.EMAIL_TOKEN_EXPIRE, 10);
-
-      const token = generateToken(payload, secret, duration);
-
-      const authClient = {
-        clientId: process.env.GOOGLE_MAIL_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_MAIL_CLIENT_SECRET,
-        redirectUri: process.env.GOOGLE_MAIL_REDIRECT_URI,
-        refreshToken: process.env.GOOGLE_MAIL_REFRESH_TOKEN,
+      const userCode = {
+        user: { id: user.id },
+        code: 'reset',
       };
 
-      await EmailHelper.sendEmail(
-        authClient,
-        process.env.EMAIL,
-        req.body.email,
+      const tokenObject = getToken(
+        { id: user.id, email: req.body.email },
+        duration
+      );
+      tokenObject.duration = duration;
+
+      await cacheToken(userCode, tokenObject);
+
+      const email = await this.send(
+        user.email,
+        tokenObject.token,
         resetPasswordTemplate(
-          user.userName,
-          `${process.env.HOST}/api/users/${user.id}/reset-password/${token}`
+          `${process.env.HOST}/api/users/reset-password/${tokenObject.token}`
         )
       );
-      return res.json({ message: 'Reset password email', token });
+
+      if (!email.token) {
+        return ErrorResponse.badGatewayError(res, email.message);
+      }
+      res.json({ message: 'Reset password email', token: email.token });
     } catch (error) {
       if (error.message === 'User not found') {
         return ErrorResponse.notFoundError(res, 'User not found');

@@ -1,8 +1,8 @@
 import passport from 'passport';
 import models from '../database/models';
-import RefreshToken from '../services/token';
-import { generateToken } from '../helpers/token';
+import { cacheToken, getToken } from '../helpers/token';
 import '../services/googlePassport';
+import successResponse from '../utils/successResponse';
 
 const { User } = models;
 passport.use(passport.initialize());
@@ -21,20 +21,38 @@ class facebookController {
           facebookId: id,
         },
       });
-      const secret = process.env.TOKEN_SECRET;
 
-      const duration = process.env.TOKEN_EXPIRE;
+      await newUser.update({ isVerified: true });
+
       const params = {
         user: { id: newUser.dataValues.id },
       };
-      const accessToken = generateToken(params, secret, duration);
-      const refreshToken = RefreshToken(params);
+      const duration = parseInt(process.env.TOKEN_EXPIRE, 10);
+      const refreshDuration = parseInt(process.env.REFRESH_EXPIRE, 10);
 
-      res.header('Authorization', accessToken).status(200).json({
-        message: 'logged in successfully',
-        accessToken,
-        refreshToken,
-      });
+      const accessTokenObject = getToken(params.user, duration);
+      accessTokenObject.duration = duration;
+      await cacheToken(
+        { user: params.user, code: 'access' },
+        accessTokenObject
+      );
+
+      const refreshTokenObject = getToken(params.user, refreshDuration);
+      refreshTokenObject.duration = refreshDuration;
+      await cacheToken(
+        { user: params.user, code: 'refresh' },
+        refreshTokenObject
+      );
+
+      return successResponse(
+        res.header('Authorization', `Bearer ${accessTokenObject.token}`),
+        200,
+        {
+          message: 'logged in successfully',
+          accessToken: accessTokenObject.token,
+          refreshToken: refreshTokenObject.token,
+        }
+      );
     } catch {
       res.status(500).send({ error: 'Oooops something went worng' });
     }

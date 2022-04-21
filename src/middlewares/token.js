@@ -1,93 +1,28 @@
 import redis from '../database/redis';
 import ErrorResponse from '../utils/errorResponse';
-import encryption from '../helpers/encryption';
-
-const { verifyToken, verifyRefresh } = encryption;
+import { verifyToken } from '../helpers/token';
 
 const secret = process.env.TOKEN_SECRET;
 const refresh = process.env.REFRESH_SECRET;
 
 class tokenValidation {
-  static verifyAccess = async (req, res, next) => {
-    try {
-      const token = req.header('Authorization').replace('Bearer ', '');
-
-      if (!token) {
-        return ErrorResponse.unauthenticatedError(res, 'Please login first!');
-      }
-
-      const decoded = await verifyToken(token, secret);
-
-      req.user = decoded.user;
-
-      req.token = token;
-
-      await redis.get(
-        `Blacklisted_${decoded.user.id.toString()}`,
-        (err, data) => {
-          if (err) {
-            return ErrorResponse.internalServerError(
-              res,
-              'Unable to perform action!'
-            );
-          }
-
-          if (data === token) {
-            return ErrorResponse.unauthenticatedError(res, 'Access denied');
-          }
-
-          next();
-        }
-      );
-    } catch (err) {
-      return next(
-        new ErrorResponse.internalServerError(
-          res,
-          `Unable to verify user... ${err.message}`
-        )
-      );
-    }
-  };
-
   static verifyRefresh = async (req, res, next) => {
     try {
-      const { token } = req.body;
-      if (!token) {
-        return ErrorResponse.badRequestError(res, 'Invalid request');
+      const { tokenId } = verifyToken(req.body.token, process.env.TOKEN_SECRET);
+
+      const tokenKey = await redis.keys(`*${tokenId}`);
+      const isValidToken = tokenKey.length > 0 && (await redis.get(tokenKey));
+
+      if (isValidToken === req.body.token) {
+        req.refreshTokenId = tokenId;
+        return next();
       }
-      const decoded = await verifyRefresh(token, refresh);
-
-      req.user = decoded.user;
-
-      await redis.get(decoded.user.id.toString(), (err, data) => {
-        if (err) {
-          return ErrorResponse.internalServerError(
-            res,
-            `Internal server error ${err.message}`
-          );
-        }
-        if (data === null) {
-          return ErrorResponse.unauthenticatedError(
-            res,
-            'Invalid request, please sign in!'
-          );
-        }
-        const userToken = JSON.parse(data);
-        if (userToken.token !== token) {
-          return ErrorResponse.unauthenticatedError(
-            res,
-            'Invalid request, Unauthorised user!'
-          );
-        }
-        next();
-      });
-    } catch (err) {
-      return next(
-        new ErrorResponse.internalServerError(
-          res,
-          `Unable to generate token ${err}`
-        )
-      );
+      return ErrorResponse.forbiddenError(res, 'Unauthorized');
+    } catch (error) {
+      if (error.status === 401) {
+        return ErrorResponse.unauthenticatedError(res, error.message);
+      }
+      ErrorResponse.internalServerError(res, error.message);
     }
   };
 }

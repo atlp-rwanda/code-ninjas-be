@@ -27,10 +27,15 @@ const authPaths = {
       responses: {
         200: response('New User was created successfully', {
           message: { type: 'string', example: 'User created successfully' },
-          token: {
+          accessToken: {
             type: 'string',
             example:
               'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzYsImVtYWlsIjoibmV3Y2hlY2tAZ21haWwuY29tIiwiaWF0IjoxNjQ5NjU5Mjk4LCJleHAiOjE2NDk2NTkzOTh9.HZ2Sj_C0R-RlYMan25XvuIP9yULg0EMyhUTYA5PxAmM',
+          },
+          refreshToken: {
+            type: 'string',
+            example:
+              'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXIiOnsiaWQiOjcyLCJlbWFpbCI6Imp1c3RpcmVuZWUxMEBnbWFpbC5jb20ifX0sInRva2VuSWQiOjE2NTA0NjIwODg0NDQsImlhdCI6MTY1MDQ2MjA4OCwiZXhwIjoxNjUwNTYyMDg4fQ.46GzO68jkkS_EaqcHuryNFnK0V6EQvcxQvzjdb3aexA',
           },
           email: {
             type: 'object',
@@ -40,16 +45,6 @@ const authPaths = {
                 type: 'string',
                 example:
                   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo0Mn0sInRva2VuSWQiOiIwY2JjMGViOS0xNzM3LTQ2OTYtOTI5YS1jM2UwNjdhYWUxNjQiLCJpYXQiOjE2NDk2ODU3NjksImV4cCI6MTY0OTY4NjA2OX0.usQERHWL-zQhj3iTWMeDTPbrX-AM5NLzh3fNmAHzH7w',
-              },
-              envelope: {
-                type: 'object',
-                properties: {
-                  from: { type: 'string', example: 'ninjascode6@gmail.com' },
-                  to: {
-                    type: 'array',
-                    items: { type: 'string', example: 'newcheck@gmail.com' },
-                  },
-                },
               },
             },
           },
@@ -72,7 +67,7 @@ const authPaths = {
   },
   '/api/auth/social/login': {
     post: {
-      tags: ['Authentication'],
+      tags: ['Auth'],
       security: [],
       description:
         '<a href="/api/auth/google">login with google</a> | <a href="/api/auth/facebook">login with facebook</a>',
@@ -90,7 +85,7 @@ const authPaths = {
   },
   '/api/auth/login': {
     post: {
-      tags: ['Authentication'],
+      tags: ['Auth'],
       description: 'Login to Barefoot Nomad',
       parameters: [],
       security: [],
@@ -133,7 +128,7 @@ const authPaths = {
   },
   '/api/auth/logout': {
     get: {
-      tags: ['Authentication'],
+      tags: ['Auth'],
       description: 'Logout from Barefoot Nomad',
       parameters: [],
       requestBody: {},
@@ -152,7 +147,7 @@ const authPaths = {
   },
   '/api/auth/token': {
     post: {
-      tags: ['Authentication'],
+      tags: ['Auth'],
       description: 'Generate new token',
       parameters: [],
       requestBody: {

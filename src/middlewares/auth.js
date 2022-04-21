@@ -1,29 +1,35 @@
+import redis from '../database/redis';
 import { verifyToken } from '../helpers/token';
 import UserService from '../services/user.service';
 import ErrorResponse from '../utils/errorResponse';
 
 const verifyAuth = async (req, res, next) => {
-  const token = req.header('Authorization') || req.params.token;
+  const token = req.header('Authorization')
+    ? req.header('Authorization').replace('Bearer ', '')
+    : req.params.token;
   if (!token) {
-    return res
-      .status(401)
-      .send({ error: 'You are not allowed to access this page' });
+    return ErrorResponse.unauthenticatedError(res, 'Access denied');
   }
   try {
-    const user = await UserService.findUser({ id: req.params.id });
-    verifyToken(
-      token,
-      req.path.includes('reset-password')
-        ? process.env.TOKEN_SECRET + user.password
-        : process.env.TOKEN_SECRET
-    );
-    req.user = user;
-    next();
+    const { user, tokenId } = verifyToken(token, process.env.TOKEN_SECRET);
+
+    const tokenKey = await redis.keys(`*${tokenId}`);
+    const isValidToken = tokenKey.length > 0 && (await redis.get(tokenKey));
+
+    if (isValidToken === token) {
+      req.user = await UserService.findUser({ id: user.id });
+      req.tokenId = tokenId;
+      return next();
+    }
+    return ErrorResponse.unauthenticatedError(res, 'Unauthorized');
   } catch (error) {
     if (error.message === 'User not found') {
       return ErrorResponse.notFoundError(res, 'User not found');
     }
-    ErrorResponse.unauthenticatedError(res, error.message);
+    if (error.status === 401) {
+      return ErrorResponse.unauthenticatedError(res, error.message);
+    }
+    ErrorResponse.internalServerError(res, error.message);
   }
 };
 export default verifyAuth;

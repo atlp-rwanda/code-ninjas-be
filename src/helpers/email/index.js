@@ -2,8 +2,14 @@ import nodemailer from 'nodemailer';
 import { setAuthCredentials, mailOptions, getTemplate } from './config';
 
 class EmailHelper {
-  static sendEmail = async (authClient, sender, receiver, template) => {
-    const { clientId, clientSecret, redirectUri, refreshToken } = authClient;
+  static sendEmail = async (authClient, receiver, template) => {
+    const {
+      clientId,
+      clientSecret,
+      redirectUri,
+      refreshToken,
+      email: sender,
+    } = authClient;
 
     const oAuth2Client = setAuthCredentials(
       clientId,

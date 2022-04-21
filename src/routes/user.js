@@ -13,14 +13,14 @@ const { resendConfirmationEmail, sendResetPasswordEmail } = EmailController;
 
 router.get('/send/confirm/:email', validateEmail, resendConfirmationEmail);
 
-router.get('/verify/:token', verifyUser);
+router.get('/verify/:token', verifyAuth, verifyUser);
 
 router.post('/send/forgot-password', validateEmail, sendResetPasswordEmail);
 
-router.get('/:id/reset-password/:token', verifyAuth, inputNewPassword);
+router.get('/reset-password/:token', verifyAuth, inputNewPassword);
 
 router.post(
-  '/:id/reset-password/:token',
+  '/reset-password/:token',
   verifyAuth,
   NewPasswordValidation.validateNewPassword,
   setNewPassword
