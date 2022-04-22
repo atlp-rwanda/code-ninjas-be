@@ -1,13 +1,9 @@
-export const isBeforeToday = async (departureDate) => {
-  const newDate = new Date();
-  const CurrentDate = `${newDate.getFullYear()}-${newDate.getMonth()}-${newDate.getDate()}`;
-  if (departureDate >= CurrentDate) {
-    return true;
-  }
+import getDate from '../utils/date';
+
+export const isBeforeToday = (departureDate) => {
+  return getDate(departureDate) < getDate(new Date());
 };
 
-export const isBeforeDepartureDate = async (departureDate, returnDate) => {
-  if (departureDate <= returnDate) {
-    return true;
-  }
+export const isAfterDepartureDate = (departureDate, returnDate) => {
+  return departureDate <= returnDate;
 };

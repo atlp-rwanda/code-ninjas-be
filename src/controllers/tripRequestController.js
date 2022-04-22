@@ -2,7 +2,7 @@
 import { date } from 'joi';
 import models from '../database/models';
 import UserService from '../services/user.service';
-import { isBeforeToday, isBeforeDepartureDate } from '../helpers/dateValidator';
+import { isBeforeToday, isAfterDepartureDate } from '../helpers/dateValidator';
 import isNumber from '../helpers/numberValidator';
 import LocationService from '../services/location.service';
 import ErrorResponse from '../utils/errorResponse';
@@ -21,13 +21,13 @@ class tripController {
     if (!managerExists) {
       return res.status(400).json({ message: 'Manager does not Exist' });
     }
-    const backDated = await isBeforeToday(req.body.departureDate);
-    if (backDated !== true) {
+    const backDated = isBeforeToday(req.body.departureDate);
+    if (backDated) {
       return res.status(400).json({
         message: `Departure date must not be back dated`,
       });
     }
-    const ReturnDateValidator = await isBeforeDepartureDate(
+    const ReturnDateValidator = isAfterDepartureDate(
       req.body.departureDate,
       req.body.returnDate
     );
@@ -67,7 +67,7 @@ class tripController {
       departureDate,
       returnDate,
       travel_reason,
-      accomodationId,
+      accommodationId,
       status,
     } = req.body;
 
@@ -79,7 +79,7 @@ class tripController {
       departureDate,
       returnDate,
       travel_reason,
-      accomodationId,
+      accommodationId,
       status,
     };
 
@@ -143,7 +143,7 @@ class tripController {
           'createdAt',
           'updatedAt',
           'requesterId',
-          'accomodationId',
+          'accommodationId',
           'departure_place',
           'destination',
           'managerId',
@@ -222,7 +222,7 @@ class tripController {
           'createdAt',
           'updatedAt',
           'requesterId',
-          'accomodationId',
+          'accommodationId',
           'departure_place',
           'destination',
           'managerId',
@@ -303,7 +303,7 @@ class tripController {
           'createdAt',
           'updatedAt',
           'requesterId',
-          'accomodationId',
+          'accommodationId',
           'departure_place',
           'destination',
           'managerId',
@@ -359,7 +359,7 @@ class tripController {
           'createdAt',
           'updatedAt',
           'requesterId',
-          'accomodationId',
+          'accommodationId',
           'departure_place',
           'destination',
           'managerId',

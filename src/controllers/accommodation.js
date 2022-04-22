@@ -2,6 +2,7 @@ import AccommodationService from '../services/accommodation.service';
 import cloudinary from '../config/cloudinary';
 import LocationService from '../services/location.service';
 import ErrorResponse from '../utils/errorResponse';
+import { isBeforeToday } from '../helpers/dateValidator';
 
 class AccommodationController {
   static createAccommodation = async (req, res, next) => {
@@ -191,7 +192,7 @@ class AccommodationController {
 
       if (like) {
         await accommodation.addUser(req.user, {
-          through: { like: null },
+          through: { like: false },
         });
         return res.status(200).json({ message: 'Like removed' });
       }
@@ -209,6 +210,50 @@ class AccommodationController {
     try {
       const likes = await AccommodationService.countLikes(req.params.id);
       res.status(200).json(likes);
+    } catch (error) {
+      ErrorResponse.internalServerError(res, error.message);
+    }
+  };
+
+  static addRate = async (req, res) => {
+    try {
+      const accommodation = await AccommodationService.findAccommodation({
+        id: req.params.id,
+      });
+      if (!accommodation) {
+        return ErrorResponse.notFoundError(res, 'Accommodation not found');
+      }
+
+      const trips = await req.user.getTripRequests({
+        where: { accommodationId: accommodation.id },
+      });
+
+      const hasStayed = trips.find((trip) => isBeforeToday(trip.departureDate));
+
+      if (!hasStayed) {
+        return ErrorResponse.semanticError(
+          res,
+          `You need to have stayed at least one day in an accommodation to rate it`
+        );
+      }
+
+      await accommodation.addUser(req.user, {
+        through: { rating: req.body.rating },
+      });
+
+      res.status(200).json({ message: 'Rate added' });
+    } catch (error) {
+      ErrorResponse.internalServerError(res, error.message);
+    }
+  };
+
+  static getRates = async (req, res) => {
+    try {
+      const [ratings] = await AccommodationService.countRatings(req.params.id);
+      const rating = ratings.dataValues.averageRating
+        ? parseFloat(ratings.dataValues.averageRating).toFixed(1)
+        : '0';
+      res.status(200).json({ rating });
     } catch (error) {
       ErrorResponse.internalServerError(res, error.message);
     }

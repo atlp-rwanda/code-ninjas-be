@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('TripRequests', {
       id: {
@@ -52,7 +52,7 @@ module.exports = {
       travel_reason: {
         type: Sequelize.STRING,
       },
-      accomodationId: {
+      accommodationId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'Accommodation',

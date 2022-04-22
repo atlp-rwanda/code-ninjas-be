@@ -1,7 +1,12 @@
 import logger from './logger';
 import verifyLogin from './login';
 import verifyAuth from './auth';
-import { checkSuperAdmin, checkAdmin, checkManager } from './role';
+import {
+  checkSuperAdmin,
+  checkAdmin,
+  checkManager,
+  checkRequester,
+} from './role';
 
 export {
   logger,
@@ -10,4 +15,5 @@ export {
   checkSuperAdmin,
   checkAdmin,
   checkManager,
+  checkRequester,
 };

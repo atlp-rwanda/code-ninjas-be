@@ -3,6 +3,7 @@ import { User, Role, Country, TripRequest } from '../../src/database/models';
 import redisClient from '../../src/database/redis';
 import Protection from '../../src/helpers/encryption';
 import { getToken } from '../../src/helpers/token';
+import getDate from '../../src/utils/date';
 
 const userOnePassword = 'JohnDoe@2022';
 const userOne = {
@@ -34,7 +35,7 @@ const manager = {
   id: 3,
   firstName: 'Jane',
   lastName: 'Doe',
-  email: 'jane.doe@email.com',
+  email: 'jane.doe.manager@email.com',
   userName: 'JaneDoe',
   password: Protection.hashPassword(managerPassword),
   createdAt: new Date(),
@@ -46,6 +47,8 @@ const countryOne = { name: 'Rwanda' };
 
 const locationOne = { city: 'Kigali' };
 
+const locationTwo = { city: 'Rubavu' };
+
 const accommodationOne = {
   name: 'Marriott Hotel',
   type: 'Hotel',
@@ -56,6 +59,12 @@ const accommodationOne = {
   ],
   address: 'KN 1 Av',
   geoCoordinates: { longitude: 30.15, latitude: -1.54 },
+};
+
+const tripOne = {
+  departureDate: getDate(Date.now()),
+  returnDate: getDate(Date.now() + 60 * 60 * 24 * 30 * 1000),
+  travel_reason: 'Vacation',
 };
 
 const setupDatabase = async () => {
@@ -88,9 +97,23 @@ const setupDatabase = async () => {
   const country = await Country.create(countryOne);
 
   const location = await country.createLocation(locationOne);
+  const departingLocation = await country.createLocation(locationTwo);
 
   const accommodation = await location.createAccommodation(accommodationOne);
   accommodationOne.id = accommodation.id;
+
+  const trip = await accommodation.createTripRequest({
+    ...tripOne,
+    managerId: manager.id,
+    departure_place: departingLocation.id,
+    destination: location.id,
+    requesterId: userOne.id,
+  });
+  tripOne.id = trip.id;
+  tripOne.managerId = trip.managerId;
+  tripOne.departure_place = trip.departure_place;
+  tripOne.destination = trip.destination;
+  tripOne.requesterId = trip.requesterId;
 };
 
 const clearDatabase = async () => {
@@ -116,6 +139,7 @@ export {
   manager,
   managerPassword,
   accommodationOne,
+  tripOne,
   setupDatabase,
   clearDatabase,
 };

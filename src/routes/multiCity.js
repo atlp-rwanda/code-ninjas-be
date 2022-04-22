@@ -1,6 +1,6 @@
 import express from 'express';
 import multiCityController from '../controllers/multiCityTrip';
-import verifyAuth from '../middlewares/auth';
+import { verifyAuth, checkRequester } from '../middlewares';
 import tripRequestValidations from '../validations/tripValidations';
 
 const router = express.Router();
@@ -8,6 +8,7 @@ const router = express.Router();
 router.post(
   '/multiCity/request',
   verifyAuth,
+  checkRequester,
   tripRequestValidations.validateTrip,
   multiCityController.multiCityRequestAtrip
 );

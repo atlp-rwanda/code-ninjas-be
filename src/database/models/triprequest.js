@@ -10,7 +10,7 @@ export default (sequelize, DataTypes) => {
     static associate(models) {
       TripRequest.belongsTo(models.Accommodation, {
         foreignKey: {
-          name: 'accomodationId',
+          name: 'accommodationId',
         },
       });
       TripRequest.belongsTo(models.Location, {
@@ -49,7 +49,7 @@ export default (sequelize, DataTypes) => {
       departureDate: DataTypes.DATEONLY,
       returnDate: DataTypes.DATEONLY,
       travel_reason: DataTypes.STRING,
-      accomodationId: DataTypes.INTEGER,
+      accommodationId: DataTypes.INTEGER,
       multiCityTripId: DataTypes.STRING,
       status: DataTypes.ENUM('pending', 'approved', 'rejected'),
       tripType: DataTypes.ENUM('one-way', 'return', 'multiCity'),

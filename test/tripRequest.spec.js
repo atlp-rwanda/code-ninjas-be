@@ -47,7 +47,7 @@ describe('Trip Request CRUD', () => {
     });
   });
 
-  describe('add accomodation', () => {
+  describe('add accommodation', () => {
     it('Should add an accommodation in a location', async () => {
       const location = await Location.findOne({ where: { city: 'Kigali' } });
       const imagePath = path.resolve('./test/mocks/assets/marriott-hotel.jpg');
@@ -86,7 +86,7 @@ describe('Trip Request CRUD', () => {
           .post('/api/trip/request')
           .set({
             connection: 'keep-alive',
-            Authorization: `Bearer ${admin.token}`,
+            Authorization: `Bearer ${userOne.token}`,
           })
           .send({
             managerId: manager.id,
@@ -95,7 +95,7 @@ describe('Trip Request CRUD', () => {
             departureDate: '2029-5-18',
             returnDate: '2029-5-20',
             travel_reason: 'visit mon',
-            accomodationId: accommodation.id,
+            accommodationId: accommodation.id,
           });
 
         expect(res.status).to.be.equal(201);
@@ -120,7 +120,7 @@ describe('Trip Request CRUD', () => {
         const res = await chai
           .request(app)
           .get(`/api/trip/request/${tripId.id}`)
-          .set({ Authorization: `Bearer ${admin.token}` });
+          .set({ Authorization: `Bearer ${userOne.token}` });
         expect(res.status).to.be.equal(200);
       });
 
@@ -131,7 +131,7 @@ describe('Trip Request CRUD', () => {
         const res = await chai
           .request(app)
           .delete(`/api/trip/request/${tripId.id}/delete`)
-          .set({ Authorization: `Bearer ${admin.token}` });
+          .set({ Authorization: `Bearer ${userOne.token}` });
         expect(res.status).to.be.equal(200);
       });
     });
