@@ -1,5 +1,5 @@
 import express from 'express';
-import RoomController from '../controllers/roomController';
+import RoomController from '../controllers/room';
 import { verifyAuth, checkAdmin } from '../middlewares';
 
 const router = express.Router();

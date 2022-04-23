@@ -1,4 +1,5 @@
-import adminScript from '../../src/config/init';
+import path from 'path';
+import { rolesScript } from '../../src/config/init';
 import { User, Role, Country } from '../../src/database/models';
 import redisClient from '../../src/database/redis';
 import Protection from '../../src/helpers/encryption';
@@ -17,21 +18,37 @@ const userOne = {
   roleId: 1,
 };
 
-const adminPassword = process.env.ADMIN_ACCOUNT_PASSWORD;
+const adminPassword = 'JaneDoe@2022';
 const admin = {
   id: 2,
-  firstName: process.env.ADMIN_ACCOUNT_FIRSTNAME,
-  lastName: process.env.ADMIN_ACCOUNT_LASTNAME,
-  email: process.env.ADMIN_ACCOUNT_EMAIL,
-  userName: process.env.ADMIN_ACCOUNT_USERNAME,
+  firstName: 'Jane',
+  lastName: 'Doe',
+  email: 'jane.doe@email.com',
+  userName: 'unknown_user',
   password: Protection.hashPassword(adminPassword),
   createdAt: new Date(),
   updatedAt: new Date(),
   roleId: 3,
 };
 
+const countryOne = { name: 'Rwanda' };
+
+const locationOne = { city: 'Kigali' };
+
+const accommodationOne = {
+  name: 'Marriott Hotel',
+  type: 'Hotel',
+  description: 'Best 4 star experience',
+  amenities: ['Lobby reception', 'Swimming pool', 'Restaurant'],
+  images: [
+    'https://res.cloudinary.com/yustogallery/image/upload/v1643336881/samples/landscapes/nature-mountains.jpg',
+  ],
+  address: 'KN 1 Av',
+  geoCoordinates: { longitude: 30.15, latitude: -1.54 },
+};
+
 const setupDatabase = async () => {
-  await adminScript();
+  await rolesScript();
   const usersData = [admin, userOne];
   await User.bulkCreate(usersData);
   const usersTokens = usersData.map((user) => {
@@ -56,6 +73,13 @@ const setupDatabase = async () => {
   await pipeline.exec((error, result) => {
     if (error) console.log(error);
   });
+
+  const country = await Country.create(countryOne);
+
+  const location = await country.createLocation(locationOne);
+
+  const accommodation = await location.createAccommodation(accommodationOne);
+  accommodationOne.id = accommodation.id;
 };
 
 const clearDatabase = async () => {
@@ -73,4 +97,11 @@ const clearDatabase = async () => {
   });
 };
 
-export { userOne, userOnePassword, admin, setupDatabase, clearDatabase };
+export {
+  userOne,
+  userOnePassword,
+  admin,
+  accommodationOne,
+  setupDatabase,
+  clearDatabase,
+};

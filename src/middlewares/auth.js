@@ -13,7 +13,7 @@ const verifyAuth = async (req, res, next) => {
   try {
     const { user, tokenId } = verifyToken(token, process.env.TOKEN_SECRET);
 
-    const tokenKey = await redis.keys(`*${tokenId}`);
+    const tokenKey = await redis.keys(`*-${user.id}-*${tokenId}`);
     const isValidToken = tokenKey.length > 0 && (await redis.get(tokenKey));
 
     if (isValidToken === token) {

@@ -1,5 +1,5 @@
+import AccommodationService from '../services/accommodation.service';
 import cloudinary from '../config/cloudinary';
-import accommodationServices from '../services/accommodation.service';
 import LocationService from '../services/location.service';
 import ErrorResponse from '../utils/errorResponse';
 
@@ -29,7 +29,7 @@ class AccommodationController {
       }
 
       const createdAccommodation =
-        await accommodationServices.createAccommodation(req.body);
+        await AccommodationService.createAccommodation(req.body);
       return res.status(201).json({
         status: '201',
         message: 'Accommodation added successfully',
@@ -43,7 +43,7 @@ class AccommodationController {
   static getOneAccommodation = async (req, res, next) => {
     try {
       const { accommodationId } = req.params;
-      const accommodation = await accommodationServices.getOneAccommodation(
+      const accommodation = await AccommodationService.getOneAccommodation(
         accommodationId
       );
       if (!accommodation) {
@@ -70,7 +70,7 @@ class AccommodationController {
         return ErrorResponse.notFoundError(res, 'Location not found');
       }
       const accommodations =
-        await accommodationServices.getAccommodationsByLocation(locationId);
+        await AccommodationService.getAccommodationsByLocation(locationId);
       res.status(200).json({
         status: 200,
         message: 'These are the accommodations in specified location',
@@ -83,7 +83,7 @@ class AccommodationController {
 
   static getAllAccommodations = async (req, res, next) => {
     try {
-      const accommodations = await accommodationServices.getAllAccommodations();
+      const accommodations = await AccommodationService.getAllAccommodations();
       res.status(200).json({
         status: 200,
         message: 'These are all the accommodations',
@@ -97,7 +97,7 @@ class AccommodationController {
   static updateAccommodation = async (req, res, next) => {
     try {
       const { accommodationId } = req.params;
-      const accommodation = await accommodationServices.getOneAccommodation(
+      const accommodation = await AccommodationService.getOneAccommodation(
         accommodationId
       );
       if (!accommodation) {
@@ -138,7 +138,7 @@ class AccommodationController {
 
   static getAllRooms = async (req, res) => {
     try {
-      const accommodation = await accommodationServices.getOneAccommodation(
+      const accommodation = await AccommodationService.getOneAccommodation(
         req.params.accommodationId
       );
       const rooms = await accommodation.getRooms();
@@ -151,7 +151,7 @@ class AccommodationController {
   static deleteAccommodation = async (req, res, next) => {
     try {
       const { accommodationId } = req.params;
-      const accommodation = await accommodationServices.getOneAccommodation(
+      const accommodation = await AccommodationService.getOneAccommodation(
         accommodationId
       );
       if (!accommodation) {
@@ -162,7 +162,7 @@ class AccommodationController {
       }
 
       const deletedAccommodation =
-        await accommodationServices.deleteAccommodation(
+        await AccommodationService.deleteAccommodation(
           req.params.accommodationId
         );
       res.status(200).json({
@@ -174,5 +174,45 @@ class AccommodationController {
       ErrorResponse.internalServerError(res, err.message);
     }
   };
+
+  static updateLike = async (req, res) => {
+    try {
+      const accommodation = await AccommodationService.findAccommodation({
+        id: req.params.id,
+      });
+      if (!accommodation) {
+        return ErrorResponse.notFoundError(res, 'Accommodation not found');
+      }
+
+      const { like } = await AccommodationService.findUserAccommodationLike(
+        req.params.id,
+        req.user.id
+      );
+
+      if (like) {
+        await accommodation.addUser(req.user, {
+          through: { like: null },
+        });
+        return res.status(200).json({ message: 'Like removed' });
+      }
+
+      await accommodation.addUser(req.user, {
+        through: { like: true },
+      });
+      return res.status(200).json({ message: 'Like added' });
+    } catch (error) {
+      ErrorResponse.internalServerError(res, error.message);
+    }
+  };
+
+  static getLikes = async (req, res) => {
+    try {
+      const likes = await AccommodationService.countLikes(req.params.id);
+      res.status(200).json(likes);
+    } catch (error) {
+      ErrorResponse.internalServerError(res, error.message);
+    }
+  };
 }
+
 export default AccommodationController;

@@ -4,6 +4,7 @@ export default {
       queryInterface.addColumn('Users', 'roleId', {
         allowNull: true,
         type: Sequelize.INTEGER,
+        defaultValue: 1,
         onDelete: 'CASCADE',
         references: {
           model: 'Roles',

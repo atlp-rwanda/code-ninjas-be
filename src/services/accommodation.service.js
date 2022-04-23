@@ -1,6 +1,11 @@
-import { Accommodation, Room } from '../database/models';
+import {
+  Accommodation,
+  Room,
+  Sequelize,
+  UserAccommodation,
+} from '../database/models';
 
-class AccommodationServices {
+class AccommodationService {
   static createAccommodation = async (data) => {
     return Accommodation.create(data);
   };
@@ -45,6 +50,25 @@ class AccommodationServices {
       where: { id },
     });
   };
+
+  static findAccommodation = async (searchParams) => {
+    return Accommodation.findOne({ where: searchParams });
+  };
+
+  static findUserAccommodationLike = async (accommodationId, userId) => {
+    return (
+      (await UserAccommodation.findOne({
+        where: { userId, accommodationId },
+      })) || { like: null }
+    );
+  };
+
+  static countLikes = async (accommodationId) => {
+    return UserAccommodation.findOne({
+      where: { accommodationId, like: true },
+      attributes: [[Sequelize.fn('count', Sequelize.col('like')), 'likes']],
+    });
+  };
 }
 
-export default AccommodationServices;
+export default AccommodationService;

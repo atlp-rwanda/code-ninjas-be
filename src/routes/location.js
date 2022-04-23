@@ -1,5 +1,5 @@
 import express from 'express';
-import locationController from '../controllers/locationController';
+import locationController from '../controllers/location';
 import { verifyAuth, checkAdmin } from '../middlewares';
 
 const router = express.Router();

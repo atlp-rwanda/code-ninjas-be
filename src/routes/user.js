@@ -2,8 +2,7 @@ import { Router } from 'express';
 import UserController from '../controllers/user';
 import EmailController from '../controllers/email';
 import { EmailValidation, NewPasswordValidation } from '../validations';
-import { verifyAuth } from '../middlewares';
-import superadminAuth from '../middlewares/superadminAuth';
+import { verifyAuth, checkSuperAdmin } from '../middlewares';
 
 const router = new Router();
 
@@ -12,8 +11,6 @@ const { verifyUser, inputNewPassword, setNewPassword, getAllUsers } =
   UserController;
 
 const { resendConfirmationEmail, sendResetPasswordEmail } = EmailController;
-
-const { checkAdmin } = superadminAuth;
 
 router.get('/send/confirm/:email', validateEmail, resendConfirmationEmail);
 
@@ -30,6 +27,6 @@ router.post(
   setNewPassword
 );
 
-router.get('/', verifyAuth, checkAdmin, getAllUsers);
+router.get('/', verifyAuth, checkSuperAdmin, getAllUsers);
 
 export default router;
