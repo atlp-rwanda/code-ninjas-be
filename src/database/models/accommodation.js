@@ -16,6 +16,7 @@ export default (sequelize, DataTypes) => {
         foreignKey: 'accommodationId',
         onDelete: 'CASCADE',
       });
+
       Accommodation.belongsToMany(models.User, {
         through: models.UserAccommodation,
         foreignKey: 'accommodationId',
@@ -24,8 +25,12 @@ export default (sequelize, DataTypes) => {
         foreignKey: 'accommodationId',
         onDelete: 'CASCADE',
       });
+      Accommodation.hasMany(models.UserAccommodation, {
+        foreignKey: 'accommodationId',
+      });
     }
   }
+
   Accommodation.init(
     {
       name: DataTypes.STRING,
@@ -51,5 +56,6 @@ export default (sequelize, DataTypes) => {
       modelName: 'Accommodation',
     }
   );
+
   return Accommodation;
 };

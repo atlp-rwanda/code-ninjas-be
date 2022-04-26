@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import AccommodationController from '../controllers/accommodation';
 import accommodationValidation from '../validations/accommodationValidation';
+import { FeedbackValidation, RatingValidation } from '../validations';
 import upload from '../helpers/multer';
 import { verifyAuth, checkAdmin, checkRequester } from '../middlewares';
-import { RatingValidation } from '../validations';
 
 const router = new Router();
 
@@ -49,5 +49,31 @@ router.post(
 );
 
 router.get('/:id/rates', AccommodationController.getRates);
+
+router.post(
+  '/:id/createFeedback',
+  verifyAuth,
+  FeedbackValidation.validateFeedback,
+  AccommodationController.addFeedback
+);
+
+router.get(
+  '/:id/GetAllFeedbacks',
+  verifyAuth,
+  AccommodationController.getFeedbacks
+);
+
+router.patch(
+  '/:id/updateFeedback',
+  verifyAuth,
+  FeedbackValidation.validateFeedback,
+  AccommodationController.updateFeedback
+);
+
+router.delete(
+  '/:id/deleteFeedback',
+  verifyAuth,
+  AccommodationController.deleteFeedback
+);
 
 export default router;
