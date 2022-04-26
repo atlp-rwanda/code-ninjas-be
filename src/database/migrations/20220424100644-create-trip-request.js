@@ -62,7 +62,7 @@ module.exports = {
         onUpdate: 'cascade',
       },
       multiCityTripId: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
       },
       status: {
         type: Sequelize.ENUM('pending', 'approved', 'rejected'),

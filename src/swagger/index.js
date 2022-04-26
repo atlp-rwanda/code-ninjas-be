@@ -9,6 +9,7 @@ import locationPaths from './location.doc';
 import roomPaths from './room.doc';
 import accommodationPaths from './accommodation.doc';
 import tripPath from './trip.doc';
+import multiCityPath from './multiCity.doc';
 
 const docrouter = Router();
 
@@ -24,6 +25,7 @@ const paths = {
   ...accommodationPaths,
   ...roomPaths,
   ...tripPath,
+  ...multiCityPath,
 };
 
 const options = {

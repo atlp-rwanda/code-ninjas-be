@@ -29,6 +29,7 @@ export default (sequelize, DataTypes) => {
         foreignKey: {
           name: 'requesterId',
         },
+        as: 'requester',
       });
 
       TripRequest.belongsTo(models.User, {
@@ -49,7 +50,9 @@ export default (sequelize, DataTypes) => {
       returnDate: DataTypes.DATEONLY,
       travel_reason: DataTypes.STRING,
       accomodationId: DataTypes.INTEGER,
+      multiCityTripId: DataTypes.STRING,
       status: DataTypes.ENUM('pending', 'approved', 'rejected'),
+      tripType: DataTypes.ENUM('one-way', 'return', 'multiCity'),
     },
     {
       sequelize,
