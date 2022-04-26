@@ -3,6 +3,7 @@ import { serve, setup } from 'swagger-ui-express';
 import components from './components';
 import authPaths from './auth.doc';
 import userPaths from './user.doc';
+import rolePaths from './roles.doc';
 
 const docrouter = Router();
 
@@ -12,6 +13,7 @@ const heroku = process.env.DB_CONNECT;
 const paths = {
   ...authPaths,
   ...userPaths,
+  ...rolePaths,
 };
 
 const options = {
@@ -32,6 +34,7 @@ const options = {
   tags: [
     { name: 'Auth', description: 'User authentication route' },
     { name: 'Users', description: 'User route' },
+    { name: 'Roles', description: 'User Roles Route' },
   ],
   paths,
   components,

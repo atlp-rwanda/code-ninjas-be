@@ -1,10 +1,6 @@
 import { Router } from 'express';
 import passport from 'passport';
-import {
-  UserValidation,
-  EmailValidation,
-  LoginValidation,
-} from '../validations';
+import { UserValidation, LoginValidation } from '../validations';
 import { verifyAuth, verifyLogin } from '../middlewares';
 import authMiddleware from '../middlewares/token';
 import UserController from '../controllers/user';
@@ -19,12 +15,7 @@ const { verifyRefresh } = authMiddleware;
 
 const router = Router();
 
-router.post(
-  '/register',
-  UserValidation.verifyUser,
-  EmailValidation.checkEmail,
-  UserController.createUser
-);
+router.post('/register', UserValidation.verifyUser, UserController.createUser);
 router.get('/facebook', passport.authenticate('facebook', { scope: 'email' }));
 
 router.get(

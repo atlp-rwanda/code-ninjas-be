@@ -5,8 +5,16 @@ import Protection from '../helpers/encryption';
 import { cacheToken, getToken } from '../helpers/token';
 import EmailController from './email';
 import { confirmTemplate } from '../helpers/email/templates';
+import models from '../database/models';
+import {
+  findAllUsers,
+  changeRole,
+  checkUserById,
+} from '../services/RolesServices';
 
 const { createUser, checkUser, findUser } = UserService;
+
+const { User, Role } = models;
 
 class UserController {
   static createUser = async (req, res) => {
@@ -127,6 +135,33 @@ class UserController {
       res.json({ message: 'Password modified successfully!' });
     } catch (error) {
       res.status(500).json({ error: error.message });
+    }
+  };
+
+  static getAllUsers = async (req, res) => {
+    try {
+      const users = await findAllUsers();
+      res.status(200).json(users);
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  };
+
+  static assignRoles = async (req, res) => {
+    const userRole = req.body.RoleId;
+    const userId = req.params.id;
+    const userExist = await checkUserById(userId, Role);
+
+    if (!userExist) {
+      return res.status(404).json({ message: 'User does not exist' });
+    }
+
+    try {
+      await changeRole(userRole, userId).then(
+        res.status(200).json({ message: 'User Role updated successfully' })
+      );
+    } catch (error) {
+      res.status(500).json({ message: 'Error updating role' });
     }
   };
 }

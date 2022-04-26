@@ -11,7 +11,11 @@ class Auth {
     try {
       const foundUser = req.user;
 
-      const user = { id: foundUser.id, email: foundUser.email };
+      const user = {
+        id: foundUser.id,
+        email: foundUser.email,
+        roleId: foundUser.roleId,
+      };
 
       const accessTokenObject = getToken(user, duration);
       accessTokenObject.duration = duration;
