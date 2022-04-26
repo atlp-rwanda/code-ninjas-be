@@ -48,40 +48,72 @@ const paths = {
       },
     },
   },
-  '/api/users/send/forgot-password': {
-    post: {
-      summary: 'send a reset password email',
-      description:
-        'In case of a forgotten password, the user receives an email that shall redirect them to enter a new password',
+  '/api/users/profile': {
+    get: {
       tags: ['Users'],
-      security: [],
+      summary: 'Retrieve single profile',
+      description: 'Retrieves profile of user who have signed up to the app',
+      parameters: [{ $ref: '#/components/parameters/token' }],
+      responses: [{ $ref: 'responses' }],
+    },
+  },
+  '/api/users/profile/complete': {
+    put: {
+      tags: ['Users'],
+      summary: 'Complete user profile',
+      description: 'Complete profile of user after registration',
+      parameters: [{ $ref: '#/components/parameters/token' }],
       requestBody: {
         content: {
-          'application/json': {
-            schema: {
-              type: 'object',
-              properties: {
-                email: { type: 'object', example: 'newcheck@gmail.com' },
-              },
-            },
+          'multipart/form-data': {
+            schema: { $ref: '#/components/schemas/userProfile' },
           },
         },
       },
       responses: {
-        200: response('Succefully sent a reset password email', {
-          message: { type: 'string', example: 'Reset password email' },
+        200: response('User profile completed successfully', {
+          message: {
+            type: 'string',
+            example: 'User profile completed successfully',
+          },
         }),
-        400: response('Invalid email provided', {
-          error: { type: 'string', example: 'value must be a valid email' },
+        500: response('Error occured while completing profiles', {
+          error: {
+            type: 'string',
+            example: 'Error occured while completing your profile',
+          },
         }),
-        404: response('User not found', {
-          error: { type: 'string', example: 'User not found' },
+      },
+    },
+  },
+  '/api/users/profile/update': {
+    patch: {
+      tags: ['Users'],
+      summary: 'Update user profile',
+      description: 'Update profile of user after completion',
+      parameters: [{ $ref: '#/components/parameters/token' }],
+      requestBody: {
+        content: {
+          'multipart/form-data': {
+            schema: { $ref: '#/components/schemas/userProfile' },
+          },
+        },
+      },
+      responses: {
+        200: response('Successfully updated profiles', {
+          message: {
+            type: 'string',
+            example: 'Successfully updated profiles',
+          },
         }),
-        500: response('Internal server error', {
-          error: { type: 'string', example: 'Failed to connect to DB' },
+        404: response("Ooops! There're no Users yet", {
+          error: { type: 'string', example: 'Ooops! No such User was found' },
         }),
-        502: response('Bad gateway', {
-          error: { type: 'string', example: 'Email service failure' },
+        500: response('Error occured while updating profiles', {
+          error: {
+            type: 'string',
+            example: 'Error occured while updating profiles',
+          },
         }),
       },
     },
@@ -121,23 +153,6 @@ const paths = {
             schema: { $ref: '#/components/schemas/NewPassword' },
           },
         },
-      },
-      responses: {
-        200: response('Succefully reset password', {
-          message: { type: 'string', example: 'Reset password email' },
-        }),
-        401: response('Invalid token', {
-          error: { type: 'string', example: 'Invalid signature' },
-        }),
-        404: response('User not found', {
-          error: { type: 'string', example: 'User not found' },
-        }),
-        422: response('Invalid password provided', {
-          error: { type: 'string', example: 'Enter the same password' },
-        }),
-        500: response('Internal server error', {
-          error: { type: 'string', example: 'Failed to connect to DB' },
-        }),
       },
     },
   },

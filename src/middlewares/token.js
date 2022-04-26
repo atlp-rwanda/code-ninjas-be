@@ -2,9 +2,6 @@ import redis from '../database/redis';
 import ErrorResponse from '../utils/errorResponse';
 import { verifyToken } from '../helpers/token';
 
-const secret = process.env.TOKEN_SECRET;
-const refresh = process.env.REFRESH_SECRET;
-
 class tokenValidation {
   static verifyRefresh = async (req, res, next) => {
     try {

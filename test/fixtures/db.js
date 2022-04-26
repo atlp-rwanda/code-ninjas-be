@@ -111,7 +111,7 @@ const setupDatabase = async () => {
   });
   tripOne.id = trip.id;
   tripOne.managerId = trip.managerId;
-  tripOne.departure_place = trip.departure_place;
+  tripOne.departureDate = trip.departure_place;
   tripOne.destination = trip.destination;
   tripOne.requesterId = trip.requesterId;
 };

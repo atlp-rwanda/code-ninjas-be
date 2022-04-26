@@ -1,7 +1,4 @@
 import bcrypt from 'bcrypt';
-import { sign, verify } from 'jsonwebtoken';
-
-const { TOKEN_SECRET, REFRESH_SECRET } = process.env;
 
 class Protection {
   static hashPassword(password) {
