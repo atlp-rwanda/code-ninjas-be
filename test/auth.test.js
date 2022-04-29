@@ -1,22 +1,25 @@
 import mocha from 'mocha';
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
-import { User } from '../src/database/models';
 import app from '../src/app';
-import { credentials } from './mocks/index';
+import {
+  userOne,
+  userOnePassword as password,
+  setupDatabase,
+  clearDatabase,
+} from './fixtures/db';
 
-const { it, describe, after } = mocha;
+const { it, describe } = mocha;
 
 chai.expect();
 chai.use(chaiHttp);
 
 describe('Testing authentication routes', () => {
-  before(async () => {
-    await chai.request(app).post('/api/auth/register').send(credentials);
-  });
+  before(setupDatabase);
+
+  after(clearDatabase);
 
   it('should not validate login with empty email', async () => {
-    const { password } = credentials;
     const res = await chai
       .request(app)
       .post('/api/auth/login')
@@ -26,7 +29,7 @@ describe('Testing authentication routes', () => {
   });
 
   it('should not validate login with empty password', async () => {
-    const { email } = credentials;
+    const { email } = userOne;
     const res = await chai.request(app).post('/api/auth/login').send({ email });
     expect(res.status).to.be.equal(422);
     expect(res.body).to.have.property('error', 'Please fill all fields');
@@ -42,7 +45,7 @@ describe('Testing authentication routes', () => {
   });
 
   it('should not validate login with invalid password', async () => {
-    const { email } = credentials;
+    const { email } = userOne;
     const res = await chai
       .request(app)
       .post('/api/auth/login')
@@ -52,7 +55,7 @@ describe('Testing authentication routes', () => {
   });
 
   it('Should not login a user with an unverified email', async () => {
-    const { email, password } = credentials;
+    const { email } = userOne;
     const res = await chai
       .request(app)
       .post('/api/auth/login')
@@ -62,7 +65,7 @@ describe('Testing authentication routes', () => {
   });
 
   it('should login a user.', async () => {
-    const { email, password } = credentials;
+    const { email } = userOne;
 
     // verify account before login
     const { body } = await chai
@@ -88,7 +91,7 @@ describe('Testing authentication routes', () => {
     expect(res.body).to.have.property('error', 'Access denied');
   });
   it('should logout a user.', async () => {
-    const { email, password } = credentials;
+    const { email } = userOne;
     const user = await chai
       .request(app)
       .post('/api/auth/login')

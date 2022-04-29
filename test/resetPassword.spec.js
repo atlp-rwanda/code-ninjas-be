@@ -14,9 +14,9 @@ import {
 chai.use(chaiHttp);
 
 describe('Reset Password', () => {
-  beforeEach(setupDatabase);
+  before(setupDatabase);
 
-  afterEach(clearDatabase);
+  after(clearDatabase);
 
   it('Should send a reset password email', async () => {
     const res = await chai
@@ -88,12 +88,11 @@ describe('Reset Password', () => {
   });
 
   it('Should not use the same link to reset password more than once', async () => {
-    const user = await UserService.findUser({ email: userOne.email });
     const { body } = await chai
       .request(app)
       .post(`/api/users/send/forgot-password`)
       .send({ email: userOne.email });
-    const newPassword = '82@Z_GHhxQEm6iA';
+    const newPassword = 'P@ssw0rd_';
     const firstResetResponse = await chai
       .request(app)
       .post(`/api/users/reset-password/${body.token}`)
@@ -126,7 +125,6 @@ describe('Reset Password', () => {
   });
 
   it('Should not reset the password with an invalid password', async () => {
-    const user = await UserService.findUser({ email: userOne.email });
     const newPassword = 'invalidPassword';
     const { body } = await chai
       .request(app)
@@ -147,7 +145,6 @@ describe('Reset Password', () => {
   });
 
   it('Should not reset the password if the password was not repeated', async () => {
-    const user = await UserService.findUser({ email: userOne.email });
     const { body } = await chai
       .request(app)
       .post(`/api/users/send/forgot-password`)
@@ -164,7 +161,6 @@ describe('Reset Password', () => {
   });
 
   it('Should not accept current password', async () => {
-    const user = await UserService.findUser({ email: userOne.email });
     const { body } = await chai
       .request(app)
       .post(`/api/users/send/forgot-password`)
@@ -173,8 +169,8 @@ describe('Reset Password', () => {
       .request(app)
       .post(`/api/users/reset-password/${body.token}`)
       .send({
-        password: userOnePassword,
-        confirmPassword: userOnePassword,
+        password: 'P@ssw0rd_',
+        confirmPassword: 'P@ssw0rd_',
       });
     expect(res.status).to.be.equal(422);
     expect(res.body).to.have.property(

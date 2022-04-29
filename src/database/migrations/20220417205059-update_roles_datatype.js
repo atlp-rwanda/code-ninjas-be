@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   async up(queryInterface, Sequelize) {
     return Promise.all([
       queryInterface.sequelize

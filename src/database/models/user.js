@@ -4,8 +4,8 @@ export default (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
       // define association here
-      User.hasOne(models.Role, {
-        foreignKey: 'id',
+      User.belongsTo(models.Role, {
+        foreignKey: 'roleId',
         onDelete: 'CASCADE',
       });
     }

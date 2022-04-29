@@ -1,6 +1,6 @@
 export default {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Roles', {
+    await queryInterface.createTable('Countries', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -8,7 +8,8 @@ export default {
         type: Sequelize.INTEGER,
       },
       name: {
-        type: Sequelize.ENUM('admin', 'requester', 'manager', 'superAdmin'),
+        type: Sequelize.STRING,
+        unique: true,
       },
       createdAt: {
         allowNull: false,
@@ -21,6 +22,6 @@ export default {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Roles');
+    await queryInterface.dropTable('Countries');
   },
 };

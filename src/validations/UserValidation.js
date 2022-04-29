@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { roleEntryValidation } from '../helpers/CheckUser';
+import roleEntryValidation from '../helpers/checkUser';
 
 const userSchema = Joi.object({
   firstName: Joi.string()

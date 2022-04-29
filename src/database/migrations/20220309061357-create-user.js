@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Users', {
       id: {

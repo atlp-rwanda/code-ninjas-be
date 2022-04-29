@@ -2,8 +2,23 @@ import bcrypt from 'bcrypt';
 import models from '../database/models';
 import UserService from '../services/user.service';
 
-const { User } = models;
+const { User, Role } = models;
 const { createUser } = UserService;
+
+const rolesScript = async () => {
+  const rolesObj = [
+    { id: 1, name: 'requester' },
+    { id: 2, name: 'manager' },
+    { id: 3, name: 'admin' },
+    { id: 4, name: 'superAdmin' },
+  ];
+  const roles = await Role.findAll();
+  if (roles.length === 0) {
+    await Role.bulkCreate(rolesObj);
+    return console.log('Roles added');
+  }
+  console.log('Roles already available');
+};
 
 const adminScript = async () => {
   const salt = await bcrypt.genSalt(10);
@@ -17,6 +32,8 @@ const adminScript = async () => {
   });
 
   if (!admin) {
+    await rolesScript();
+
     createUser({
       firstName: process.env.ADMIN_ACCOUNT_FIRSTNAME,
       lastName: process.env.ADMIN_ACCOUNT_LASTNAME,
@@ -31,7 +48,5 @@ const adminScript = async () => {
     console.log('Admin Already Registered');
   }
 };
-
-adminScript();
 
 export default adminScript;

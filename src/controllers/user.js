@@ -10,7 +10,7 @@ import {
   findAllUsers,
   changeRole,
   checkUserById,
-} from '../services/RolesServices';
+} from '../services/role.service';
 
 const { createUser, checkUser, findUser } = UserService;
 
