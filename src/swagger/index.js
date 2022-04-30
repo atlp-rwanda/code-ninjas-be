@@ -4,6 +4,7 @@ import components from './components';
 import authPaths from './auth.doc';
 import userPaths from './user.doc';
 import rolePaths from './roles.doc';
+import commentPaths from './comment.doc';
 
 const docrouter = Router();
 
@@ -14,6 +15,7 @@ const paths = {
   ...authPaths,
   ...userPaths,
   ...rolePaths,
+  ...commentPaths,
 };
 
 const options = {
