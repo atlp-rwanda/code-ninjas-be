@@ -1,8 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { config } from 'dotenv';
 import redis from '../database/redis';
-
-config();
 
 export const generateToken = (data, secret, expiresIn) => {
   return jwt.sign(data, secret, { expiresIn });

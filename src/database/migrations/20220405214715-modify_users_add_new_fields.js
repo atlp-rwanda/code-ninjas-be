@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   up(queryInterface, Sequelize) {
     return Promise.all([
       queryInterface.addColumn('Users', 'roleId', {

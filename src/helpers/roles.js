@@ -1,7 +1,7 @@
 const roles = {
-  ADMIN: 'admin',
-  REQUESTER: 'requester',
-  MANAGER: 'manager',
-  SUPER_ADMIN: 'superAdmin',
+  1: 'admin',
+  2: 'requester',
+  3: 'manager',
+  4: 'superAdmin',
 };
 export default roles;

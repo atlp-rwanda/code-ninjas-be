@@ -1,10 +1,9 @@
-/* eslint-disable import/prefer-default-export */
 import Joi from 'joi';
 import models from '../database/models';
 
 const { User } = models;
 
-export const roleEntryValidation = Joi.object({
+export default Joi.object({
   RoleId: Joi.string()
     .valid('1', '2', '3')
     .required()

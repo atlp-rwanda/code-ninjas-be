@@ -1,14 +1,21 @@
 export default {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Roles', {
+    await queryInterface.createTable('Locations', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      name: {
-        type: Sequelize.ENUM('admin', 'requester', 'manager', 'superAdmin'),
+      city: {
+        type: Sequelize.STRING,
+      },
+      countryId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: { model: 'Countries', key: 'id' },
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
       },
       createdAt: {
         allowNull: false,
@@ -21,6 +28,6 @@ export default {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Roles');
+    await queryInterface.dropTable('Locations');
   },
 };

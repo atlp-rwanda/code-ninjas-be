@@ -11,12 +11,12 @@ import { userOne, setupDatabase, clearDatabase } from './fixtures/db';
 describe('Verify email', () => {
   const sandbox = sinon.createSandbox();
 
-  beforeEach(async () => {
+  before(async () => {
     await setupDatabase();
     sandbox.spy(EmailController, 'send');
   });
 
-  afterEach(async () => {
+  after(async () => {
     await clearDatabase();
     sandbox.restore();
   });

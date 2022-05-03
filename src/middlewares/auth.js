@@ -19,7 +19,7 @@ const verifyAuth = async (req, res, next) => {
     if (isValidToken === token) {
       req.user = await UserService.findUser({ id: user.id });
       req.tokenId = tokenId;
-      req.roleId = user.roleId;
+      req.roleId = req.user.roleId;
       return next();
     }
     return ErrorResponse.unauthenticatedError(res, 'Unauthorized');

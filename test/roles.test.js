@@ -4,7 +4,7 @@ import chaiHttp from 'chai-http';
 import { config } from 'dotenv';
 import app from '../src/app';
 import { saveUser } from './mocks/index';
-import { findIdUser } from '../src/services/RolesServices';
+import { findIdUser } from '../src/services/role.service';
 import adminScript from '../src/config/init';
 
 config();
