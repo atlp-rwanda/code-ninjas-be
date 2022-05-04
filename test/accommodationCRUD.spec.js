@@ -18,7 +18,7 @@ describe('Accommodations CRUD', () => {
         .request(app)
         .post('/api/countries')
         .set('Authorization', `Bearer ${admin.token}`)
-        .send({ name: 'Rwanda' });
+        .send({ name: 'Kenya' });
 
       expect(res.status).to.be.equal(200);
       expect(res.body).to.have.property('message', 'Country added');
@@ -50,7 +50,7 @@ describe('Accommodations CRUD', () => {
         .request(app)
         .post('/api/locations')
         .set('Authorization', `Bearer ${admin.token}`)
-        .send({ city: 'Kigali', country: 'Rwanda' });
+        .send({ city: 'Nairobi', country: 'Kenya' });
 
       expect(res.status).to.be.equal(201);
       expect(res.body).to.have.property(
@@ -73,23 +73,20 @@ describe('Accommodations CRUD', () => {
 
   describe('Accommodations CRUD', () => {
     it('Should add an accommodation in a location', async () => {
-      const location = await Location.findOne({ where: { city: 'Kigali' } });
+      const location = await Location.findOne({ where: { city: 'Nairobi' } });
       const imagePath = path.resolve('./test/mocks/assets/marriott-hotel.jpg');
       const res = await chai
         .request(app)
         .post('/api/accommodations')
-        .set({
-          connection: 'keep-alive',
-          Authorization: `Bearer ${admin.token}`,
-        })
+        .set({ Authorization: `Bearer ${admin.token}` })
         .field({
-          name: 'Marriott Hotel',
+          name: 'Hilton Hotel',
           type: 'Hotel',
-          description: '5 star experience',
+          description: 'Best 4 star experience',
           amenities: 'Lobby reception,Swimming pool,Restaurant',
           images: imagePath,
-          address: 'KN 3 Av',
-          geoCoordinates: JSON.stringify({ longitude: 30.15, latitude: 1.54 }),
+          address: 'Mama Ngina St',
+          geoCoordinates: JSON.stringify({ longitude: 36.15, latitude: -1.54 }),
           locationId: location.id.toString(),
         });
 
@@ -102,7 +99,7 @@ describe('Accommodations CRUD', () => {
 
     it('Should add a room to an accommodation', async () => {
       const accommodation = await Accommodation.findOne({
-        where: { name: 'Marriott Hotel' },
+        where: { name: 'Hilton Hotel' },
       });
 
       const res = await chai
@@ -124,7 +121,7 @@ describe('Accommodations CRUD', () => {
 
     it('Should not add a room number twice in the same accommodation', async () => {
       const accommodation = await Accommodation.findOne({
-        where: { name: 'Marriott Hotel' },
+        where: { name: 'Hilton Hotel' },
       });
 
       const res = await chai

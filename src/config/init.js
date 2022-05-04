@@ -5,7 +5,7 @@ import UserService from '../services/user.service';
 const { User, Role } = models;
 const { createUser } = UserService;
 
-const rolesScript = async () => {
+export const rolesScript = async () => {
   const rolesObj = [
     { id: 1, name: 'requester' },
     { id: 2, name: 'manager' },
@@ -48,5 +48,9 @@ const adminScript = async () => {
     console.log('Admin Already Registered');
   }
 };
+
+(async () => {
+  await adminScript();
+})();
 
 export default adminScript;

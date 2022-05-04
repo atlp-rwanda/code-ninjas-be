@@ -1,3 +1,5 @@
+import response from './utils/responses';
+
 export default {
   '/api/accommodations/': {
     post: {
@@ -142,6 +144,33 @@ export default {
         200: {
           description: 'All rooms retrieved successfuly!',
         },
+      },
+    },
+  },
+  '/api/accommodations/{id}/react': {
+    get: {
+      summary: 'Like/unlike to an accommodation',
+      tags: ['Accommodations'],
+      description: 'A user can like or dislike an accommodation based',
+      parameters: [{ $ref: '#/components/parameters/id' }],
+      responses: {
+        200: response('Successfully changed like status', {
+          message: { type: 'string', example: 'Like added' },
+        }),
+      },
+    },
+  },
+  '/api/accommodations/{id}/likes': {
+    get: {
+      summary: 'Gets the total likes of an accommodation',
+      tags: ['Accommodations'],
+      security: [],
+      description: 'A user can view the total likes of an accommodation',
+      parameters: [{ $ref: '#/components/parameters/id' }],
+      responses: {
+        200: response('Successfully fetched all likes', {
+          likes: { type: 'number', example: 45 },
+        }),
       },
     },
   },

@@ -4,9 +4,9 @@ import authRoutes from './auth';
 import usersRoutes from './user';
 import roles from './roles';
 import countryPaths from './country';
-import locationsRoutes from './locationsRoutes';
-import accommodationsRoutes from './accommodationsRoutes';
-import roomsRoutes from './roomsRoutes';
+import locationsRoutes from './location';
+import accommodationRoutes from './accommodation';
+import roomsRoutes from './rooms';
 
 const router = Router();
 
@@ -16,7 +16,7 @@ router.use('/users', usersRoutes);
 router.use('/auth', authRoutes);
 router.use('/countries', countryPaths);
 router.use('/locations', locationsRoutes);
-router.use('/accommodations', accommodationsRoutes);
+router.use('/accommodations', accommodationRoutes);
 router.use('/rooms', roomsRoutes);
 
 export default router;

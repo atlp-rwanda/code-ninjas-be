@@ -1,10 +1,10 @@
-import express from 'express';
-import { verifyAuth, checkAdmin } from '../middlewares';
+import { Router } from 'express';
+import AccommodationController from '../controllers/accommodation';
 import accommodationValidation from '../validations/accommodationValidation';
-import AccommodationController from '../controllers/accommodationsController';
 import upload from '../helpers/multer';
+import { verifyAuth, checkAdmin } from '../middlewares';
 
-const router = express.Router();
+const router = new Router();
 
 const { validateNewAccommodation, validateAccommodationUpdate } =
   accommodationValidation;
@@ -34,5 +34,9 @@ router.delete(
   checkAdmin,
   AccommodationController.deleteAccommodation
 );
+
+router.get('/:id/react', verifyAuth, AccommodationController.updateLike);
+
+router.get('/:id/likes', AccommodationController.getLikes);
 
 export default router;

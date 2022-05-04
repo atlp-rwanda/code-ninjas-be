@@ -8,6 +8,10 @@ export default (sequelize, DataTypes) => {
         foreignKey: 'roleId',
         onDelete: 'CASCADE',
       });
+      User.belongsToMany(models.Accommodation, {
+        through: models.UserAccommodation,
+        foreignKey: 'userId',
+      });
     }
   }
   User.init(
