@@ -18,6 +18,7 @@ class facebookController {
           firstName: name.familyName,
           lastName: name.givenName,
           userName: displayName,
+          isVerified: true,
           facebookId: id,
         },
       });

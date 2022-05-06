@@ -10,6 +10,10 @@ export default (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Location.belongsTo(models.Country, { foreignKey: 'countryId' });
+      Location.hasMany(models.TripRequest, {
+        foreignKey: 'id',
+        onDelete: 'CASCADE',
+      });
       Location.hasMany(models.Accommodation, {
         as: 'Accommodations',
         foreignKey: 'locationId',

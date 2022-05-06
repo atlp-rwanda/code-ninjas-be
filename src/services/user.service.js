@@ -28,6 +28,11 @@ class UserService {
     }
     return user;
   };
+
+  static checkManager = async (params) => {
+    const manager = await User.findOne({ where: params });
+    return manager;
+  };
 }
 
 export default UserService;

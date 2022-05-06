@@ -20,6 +20,10 @@ export default (sequelize, DataTypes) => {
         through: models.UserAccommodation,
         foreignKey: 'accommodationId',
       });
+      Accommodation.hasMany(models.TripRequest, {
+        foreignKey: 'id',
+        onDelete: 'CASCADE',
+      });
     }
   }
   Accommodation.init(

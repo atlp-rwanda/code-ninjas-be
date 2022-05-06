@@ -7,6 +7,12 @@ export default (sequelize, DataTypes) => {
       User.belongsTo(models.Role, {
         foreignKey: 'roleId',
         onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
+      });
+      User.hasMany(models.TripRequest, {
+        foreignKey: 'id',
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
       });
       User.belongsToMany(models.Accommodation, {
         through: models.UserAccommodation,
