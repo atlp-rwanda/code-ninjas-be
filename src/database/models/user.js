@@ -23,6 +23,15 @@ export default (sequelize, DataTypes) => {
         through: models.UserAccommodation,
         foreignKey: 'userId',
       });
+
+      User.belongsToMany(models.TripRequest, {
+        through: models.UserTripRequest,
+        foreignKey: 'userId',
+      });
+
+      User.hasMany(models.UserTripRequest, {
+        foreignKey: 'userId',
+      });
     }
   }
   User.init(

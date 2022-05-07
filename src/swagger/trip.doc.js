@@ -277,6 +277,129 @@ const tripPath = {
       },
     },
   },
+
+  '/api/trip/{id}/Comment': {
+    post: {
+      summary: 'Add comment to a trip request',
+      tags: ['Trip Request'],
+      description: 'A user can add a comment to a trip request',
+      parameters: [{ $ref: '#/components/parameters/id' }],
+      requestBody: {
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                comment: {
+                  type: 'string',
+                  example: 'I hated the weather',
+                },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        201: {
+          description: 'Comment added Successfully',
+        },
+        400: {
+          description: 'Validation Error',
+        },
+        404: {
+          description: 'Trip request Not found',
+        },
+      },
+    },
+  },
+  '/api/trip/{id}/GetAllComments': {
+    get: {
+      summary: 'Gets all comments of a trip request',
+      tags: ['Trip Request'],
+      description: 'An admin can view all the comments of a trip request',
+      parameters: [
+        {
+          name: 'id',
+          in: 'path',
+          descrpition: 'Please enter accommodation ID here',
+          required: true,
+          type: 'integer',
+        },
+      ],
+      responses: {
+        200: {
+          description: 'Comments fetched Successfully',
+        },
+        400: {
+          description: 'Validation Error',
+        },
+        404: {
+          description: 'Trip request Not found',
+        },
+      },
+    },
+  },
+  '/api/trip/{id}/updateComment': {
+    patch: {
+      summary: 'Update the comment of a trip request',
+      tags: ['Trip Request'],
+      description: 'A user can update the comment of a trip request',
+      parameters: [{ $ref: '#/components/parameters/id' }],
+      requestBody: {
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                comment: {
+                  type: 'string',
+                  example: 'updated comment',
+                },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        201: {
+          description: 'Comment updated Successfully',
+        },
+        400: {
+          description: 'Validation Error',
+        },
+        404: {
+          description: 'Trip request Not found',
+        },
+      },
+    },
+  },
+  '/api/trip/{id}/deleteComment': {
+    delete: {
+      summary: 'This will delete the comment of a trip request',
+      tags: ['Trip Request'],
+      description: 'An admin can delete the comment of a trip request',
+      parameters: [
+        {
+          name: 'id',
+          in: 'path',
+          descrpition: 'Please enter accommodation ID here',
+          required: true,
+          type: 'integer',
+        },
+      ],
+      responses: {
+        200: {
+          description: 'Comment deleted Successfully',
+        },
+        400: {
+          description: 'Validation Error',
+        },
+        404: {
+          description: 'Trip request Not found',
+        },
+      },
+    },
+  },
 };
 
 export default tripPath;

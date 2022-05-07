@@ -38,6 +38,15 @@ export default (sequelize, DataTypes) => {
         },
         as: 'manager',
       });
+
+      TripRequest.belongsToMany(models.User, {
+        through: models.UserTripRequest,
+        foreignKey: 'tripRequestId',
+      });
+
+      TripRequest.hasMany(models.UserTripRequest, {
+        foreignKey: 'tripRequestId',
+      });
     }
   }
   TripRequest.init(
