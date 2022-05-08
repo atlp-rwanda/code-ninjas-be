@@ -13,7 +13,7 @@ import { TripRequest, Location, Accommodation } from '../src/database/models';
 
 chai.use(chaiHttp);
 
-describe('Trip Request CRUD', () => {
+describe('Multi city Trip Request CRUD', () => {
   before(setupDatabase);
 
   after(clearDatabase);
@@ -74,8 +74,8 @@ describe('Trip Request CRUD', () => {
         'Accommodation added successfully'
       );
     });
-    describe('Trip Request CRUD', () => {
-      it('Should add a trip request', async () => {
+    describe('Multi City Trip Request CRUD', () => {
+      it('Should add a multi city trip request', async () => {
         const accommodation = await Accommodation.findOne({
           where: { name: 'Marriott Hotel' },
         });
@@ -83,20 +83,33 @@ describe('Trip Request CRUD', () => {
         const location2 = await Location.findOne({ where: { city: 'Butare' } });
         const res = await chai
           .request(app)
-          .post('/api/trip/request')
+          .post('/api/trip/multiCity/request')
           .set({
             connection: 'keep-alive',
             Authorization: `Bearer ${admin.token}`,
           })
-          .send({
-            managerId: manager.id,
-            departure_place: location2.id,
-            destination: location.id,
-            departureDate: '2029-5-18',
-            returnDate: '2029-5-20',
-            travel_reason: 'visit mon',
-            accomodationId: accommodation.id,
-          });
+          .send([
+            {
+              managerId: manager.id,
+              departure_place: location2.id,
+              destination: location.id,
+              departureDate: '2029-5-18',
+              returnDate: '2029-5-20',
+              travel_reason: 'visit mon',
+              tripType: 'multiCity',
+              accomodationId: accommodation.id,
+            },
+            {
+              managerId: manager.id,
+              departure_place: location.id,
+              destination: location2.id,
+              departureDate: '2029-5-20',
+              returnDate: '2029-5-30',
+              travel_reason: 'visit mon',
+              tripType: 'multiCity',
+              accomodationId: accommodation.id,
+            },
+          ]);
 
         expect(res.status).to.be.equal(201);
         expect(res.body).to.have.property(
@@ -105,32 +118,34 @@ describe('Trip Request CRUD', () => {
         );
       });
 
-      it('Should get all trip requests', async () => {
+      it('Should get all multi city trip requests', async () => {
         const res = await chai
           .request(app)
-          .get('/api/trip/request/list')
+          .get('/api/trip/multiCity/requests')
           .set({ Authorization: `Bearer ${admin.token}` });
         expect(res.status).to.be.equal(200);
       });
 
-      it('Should get a trip request', async () => {
+      it('Should get a single multi city trip request', async () => {
         const tripId = await TripRequest.findOne({
           where: { travel_reason: 'visit mon' },
         });
         const res = await chai
           .request(app)
-          .get(`/api/trip/request/${tripId.id}`)
+          .get(`/api/trip/multiCity/request/${tripId.multiCityTripId}`)
           .set({ Authorization: `Bearer ${admin.token}` });
         expect(res.status).to.be.equal(200);
       });
 
-      it('Should delete a trip request', async () => {
+      it('Should delete a multi city trip request', async () => {
         const tripId = await TripRequest.findOne({
           where: { travel_reason: 'visit mon' },
         });
         const res = await chai
           .request(app)
-          .delete(`/api/trip/request/${tripId.id}/delete`)
+          .delete(
+            `/api/trip/multiCity/delete/request/${tripId.multiCityTripId}`
+          )
           .set({ Authorization: `Bearer ${admin.token}` });
         expect(res.status).to.be.equal(200);
       });

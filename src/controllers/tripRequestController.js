@@ -147,6 +147,7 @@ class tripController {
           'departure_place',
           'destination',
           'managerId',
+          'multiCityTripId',
         ],
       },
     })
@@ -225,6 +226,7 @@ class tripController {
           'departure_place',
           'destination',
           'managerId',
+          'multiCityTripId',
         ],
       },
     })
@@ -274,7 +276,7 @@ class tripController {
         },
         {
           model: User,
-          as: 'manager',
+          as: 'requester',
           attributes: ['lastName', 'firstName', 'email'],
         },
         {
@@ -305,6 +307,7 @@ class tripController {
           'departure_place',
           'destination',
           'managerId',
+          'multiCityTripId',
         ],
       },
     })
@@ -314,7 +317,7 @@ class tripController {
           : res.status(404).json({ response: 'No trip found' });
       })
       .catch((error) => {
-        res.json({ response: error.parent.detail });
+        res.json({ response: error.message });
       });
   };
 
@@ -360,6 +363,7 @@ class tripController {
           'departure_place',
           'destination',
           'managerId',
+          'multiCityTripId',
         ],
       },
     })

@@ -134,7 +134,7 @@ const authPaths = {
       requestBody: {},
       responses: {
         200: {
-          description: 'User logout successfully',
+          description: 'User logout succesful',
         },
         403: {
           description: 'Please sign in first',
