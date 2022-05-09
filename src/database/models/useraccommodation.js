@@ -15,6 +15,11 @@ export default (sequelize, DataTypes) => {
     {
       like: {
         type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      rating: {
+        type: DataTypes.DECIMAL(10, 1),
+        validate: { min: 0, max: 5 },
       },
       userId: {
         type: DataTypes.INTEGER,

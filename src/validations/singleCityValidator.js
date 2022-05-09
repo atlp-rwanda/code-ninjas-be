@@ -11,7 +11,7 @@ const SingleTripRequestSchema = Joi.object({
   departureDate: Joi.date().required(),
   returnDate: Joi.date().required(),
   travel_reason: Joi.string().required(),
-  accomodationId: Joi.number().required(),
+  accommodationId: Joi.number().required(),
 });
 
 class tripRequestValidations {
@@ -19,9 +19,9 @@ class tripRequestValidations {
     try {
       const wholeTrip = req.body;
 
-      // check if accomodation is in the same city with location
+      // check if accommodation is in the same city with location
       const acc = await Accommodation.findOne({
-        where: { id: wholeTrip.accomodationId },
+        where: { id: wholeTrip.accommodationId },
       });
 
       if (!acc) {

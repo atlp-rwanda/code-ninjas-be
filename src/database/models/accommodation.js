@@ -21,7 +21,7 @@ export default (sequelize, DataTypes) => {
         foreignKey: 'accommodationId',
       });
       Accommodation.hasMany(models.TripRequest, {
-        foreignKey: 'id',
+        foreignKey: 'accommodationId',
         onDelete: 'CASCADE',
       });
     }

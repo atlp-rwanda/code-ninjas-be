@@ -34,9 +34,9 @@ const TripRequestSchema = {
         type: 'string',
         description: 'reason for travel',
       },
-      accomodationId: {
+      accommodationId: {
         type: 'integer',
-        description: 'id of accomodation',
+        description: 'id of accommodation',
       },
       status: {
         type: 'ENUM',

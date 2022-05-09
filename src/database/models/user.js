@@ -10,7 +10,12 @@ export default (sequelize, DataTypes) => {
         onUpdate: 'CASCADE',
       });
       User.hasMany(models.TripRequest, {
-        foreignKey: 'id',
+        foreignKey: 'requesterId',
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
+      });
+      User.hasMany(models.TripRequest, {
+        foreignKey: 'managerId',
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
       });

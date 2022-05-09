@@ -59,7 +59,7 @@ class AccommodationService {
     return (
       (await UserAccommodation.findOne({
         where: { userId, accommodationId },
-      })) || { like: null }
+      })) || { like: false }
     );
   };
 
@@ -67,6 +67,15 @@ class AccommodationService {
     return UserAccommodation.findOne({
       where: { accommodationId, like: true },
       attributes: [[Sequelize.fn('count', Sequelize.col('like')), 'likes']],
+    });
+  };
+
+  static countRatings = async (accommodationId) => {
+    return UserAccommodation.findAll({
+      where: { accommodationId },
+      attributes: [
+        [Sequelize.fn('avg', Sequelize.col('rating')), 'averageRating'],
+      ],
     });
   };
 }

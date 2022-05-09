@@ -2,7 +2,8 @@ import { Router } from 'express';
 import AccommodationController from '../controllers/accommodation';
 import accommodationValidation from '../validations/accommodationValidation';
 import upload from '../helpers/multer';
-import { verifyAuth, checkAdmin } from '../middlewares';
+import { verifyAuth, checkAdmin, checkRequester } from '../middlewares';
+import { RatingValidation } from '../validations';
 
 const router = new Router();
 
@@ -38,5 +39,15 @@ router.delete(
 router.get('/:id/react', verifyAuth, AccommodationController.updateLike);
 
 router.get('/:id/likes', AccommodationController.getLikes);
+
+router.post(
+  '/:id/rates',
+  verifyAuth,
+  checkRequester,
+  RatingValidation.validateRate,
+  AccommodationController.addRate
+);
+
+router.get('/:id/rates', AccommodationController.getRates);
 
 export default router;

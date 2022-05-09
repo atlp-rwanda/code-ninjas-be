@@ -14,11 +14,6 @@ export default {
               $ref: '#/components/schemas/Accommodation',
             },
           },
-          'application/json': {
-            schema: {
-              $ref: '#/components/schemas/Accommodation',
-            },
-          },
         },
       },
       responses: {
@@ -157,6 +152,15 @@ export default {
         200: response('Successfully changed like status', {
           message: { type: 'string', example: 'Like added' },
         }),
+        401: response('Unauthenticated user', {
+          error: { type: 'string', example: 'Unauthorized' },
+        }),
+        404: response('Resource not found', {
+          error: { type: 'string', example: 'Accommodation not found' },
+        }),
+        500: response('Internal server error', {
+          error: { type: 'string', example: 'Connection timeout' },
+        }),
       },
     },
   },
@@ -170,6 +174,71 @@ export default {
       responses: {
         200: response('Successfully fetched all likes', {
           likes: { type: 'number', example: 45 },
+        }),
+        404: response('Resource not found', {
+          error: { type: 'string', example: 'Accommodation not found' },
+        }),
+        500: response('Internal server error', {
+          error: { type: 'string', example: 'Connection timeout' },
+        }),
+      },
+    },
+  },
+  '/api/accommodations/{id}/rates': {
+    post: {
+      summary: 'Add a rate to an accommodation',
+      tags: ['Accommodations'],
+      description: 'A user can a rate to an accommodation from 0 to 5',
+      parameters: [{ $ref: '#/components/parameters/id' }],
+      requestBody: {
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: { rating: { type: 'number', example: 4.5 } },
+            },
+          },
+        },
+      },
+      responses: {
+        200: response('Successfully rated', {
+          message: { type: 'string', example: 'Rate added' },
+        }),
+        401: response('Unauthenticated user', {
+          error: { type: 'string', example: 'Unauthorized' },
+        }),
+        403: response('Non-requester user', {
+          error: { type: 'string', example: 'Unauthorized access' },
+        }),
+        404: response('Resource not found', {
+          error: { type: 'string', example: 'Accommodation not found' },
+        }),
+        422: response('Bad input', {
+          error: {
+            type: 'string',
+            example: 'Enter either a full rate or half a rate',
+          },
+        }),
+        500: response('Internal server error', {
+          error: { type: 'string', example: 'Connection timeout' },
+        }),
+      },
+    },
+    get: {
+      summary: 'Gets the rating of an accommodation',
+      tags: ['Accommodations'],
+      security: [],
+      description: 'A user can view the average rating of an accommodation',
+      parameters: [{ $ref: '#/components/parameters/id' }],
+      responses: {
+        200: response('Successfully fetched all rates', {
+          ratings: { type: 'string', example: '4.5' },
+        }),
+        404: response('Resource not found', {
+          error: { type: 'string', example: 'Accommodation not found' },
+        }),
+        500: response('Internal server error', {
+          error: { type: 'string', example: 'Connection timeout' },
         }),
       },
     },

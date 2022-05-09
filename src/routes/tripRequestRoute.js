@@ -2,13 +2,14 @@ import express from 'express';
 import tripController from '../controllers/tripRequestController';
 import verifyAuth from '../middlewares/auth';
 import tripRequestValidations from '../validations/singleCityValidator';
-import { checkManager } from '../middlewares';
+import { checkManager, checkRequester } from '../middlewares';
 
 const router = express.Router();
 
 router.post(
   '/request',
   verifyAuth,
+  checkRequester,
   tripRequestValidations.validateTrip,
   tripController.requestAtrip
 );

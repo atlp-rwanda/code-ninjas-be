@@ -47,7 +47,7 @@ describe('Multi city Trip Request CRUD', () => {
     });
   });
 
-  describe('add accomodation', () => {
+  describe('add accommodation', () => {
     it('Should add an accommodation in a location', async () => {
       const location = await Location.findOne({ where: { city: 'Kigali' } });
       const imagePath = path.resolve('./test/mocks/assets/marriott-hotel.jpg');
@@ -86,7 +86,7 @@ describe('Multi city Trip Request CRUD', () => {
           .post('/api/trip/multiCity/request')
           .set({
             connection: 'keep-alive',
-            Authorization: `Bearer ${admin.token}`,
+            Authorization: `Bearer ${userOne.token}`,
           })
           .send([
             {
@@ -97,7 +97,7 @@ describe('Multi city Trip Request CRUD', () => {
               returnDate: '2029-5-20',
               travel_reason: 'visit mon',
               tripType: 'multiCity',
-              accomodationId: accommodation.id,
+              accommodationId: accommodation.id,
             },
             {
               managerId: manager.id,
@@ -107,7 +107,7 @@ describe('Multi city Trip Request CRUD', () => {
               returnDate: '2029-5-30',
               travel_reason: 'visit mon',
               tripType: 'multiCity',
-              accomodationId: accommodation.id,
+              accommodationId: accommodation.id,
             },
           ]);
 
@@ -122,7 +122,7 @@ describe('Multi city Trip Request CRUD', () => {
         const res = await chai
           .request(app)
           .get('/api/trip/multiCity/requests')
-          .set({ Authorization: `Bearer ${admin.token}` });
+          .set({ Authorization: `Bearer ${userOne.token}` });
         expect(res.status).to.be.equal(200);
       });
 
@@ -133,7 +133,7 @@ describe('Multi city Trip Request CRUD', () => {
         const res = await chai
           .request(app)
           .get(`/api/trip/multiCity/request/${tripId.multiCityTripId}`)
-          .set({ Authorization: `Bearer ${admin.token}` });
+          .set({ Authorization: `Bearer ${userOne.token}` });
         expect(res.status).to.be.equal(200);
       });
 
@@ -146,7 +146,7 @@ describe('Multi city Trip Request CRUD', () => {
           .delete(
             `/api/trip/multiCity/delete/request/${tripId.multiCityTripId}`
           )
-          .set({ Authorization: `Bearer ${admin.token}` });
+          .set({ Authorization: `Bearer ${userOne.token}` });
         expect(res.status).to.be.equal(200);
       });
     });

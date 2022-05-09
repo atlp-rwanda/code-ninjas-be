@@ -19,7 +19,7 @@ const multiCityPath = {
                 returnDate: '2022-4-28',
                 travel_reason: 'visit mon',
                 tripType: 'multiCity',
-                accomodationId: 1,
+                accommodationId: 1,
               },
               {
                 managerId: 1,
@@ -29,7 +29,7 @@ const multiCityPath = {
                 returnDate: '2022-4-31',
                 travel_reason: 'visit mon',
                 tripType: 'multiCity',
-                accomodationId: 2,
+                accommodationId: 2,
               },
               {
                 managerId: 1,
@@ -39,7 +39,7 @@ const multiCityPath = {
                 returnDate: '2022-4-28',
                 travel_reason: 'visit mon',
                 tripType: 'multiCity',
-                accomodationId: 3,
+                accommodationId: 3,
               },
             ],
           },

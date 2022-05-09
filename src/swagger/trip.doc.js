@@ -17,7 +17,7 @@ const tripPath = {
               departureDate: '2029-4-18',
               returnDate: '2029-4-29',
               travel_reason: 'visit mon',
-              accomodationId: 2,
+              accommodationId: 2,
             },
           },
         },

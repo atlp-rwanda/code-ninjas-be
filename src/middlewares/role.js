@@ -26,3 +26,12 @@ export const checkAdmin = async (req, res, next) => {
   }
   next();
 };
+
+export const checkRequester = async (req, res, next) => {
+  if (req.user.roleId !== 1) {
+    return res.status(403).json({
+      error: 'Unauthorized access',
+    });
+  }
+  next();
+};
