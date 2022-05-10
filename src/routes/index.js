@@ -9,6 +9,7 @@ import accommodationRoutes from './accommodation';
 import roomsRoutes from './rooms';
 import triprequest from './tripRequestRoute';
 import multiCity from './multiCity';
+import approveOrRejectRequest from './approveOrRejectRequest';
 
 const router = Router();
 
@@ -22,5 +23,6 @@ router.use('/accommodations', accommodationRoutes);
 router.use('/rooms', roomsRoutes);
 router.use('/trip', triprequest);
 router.use('/trip', multiCity);
+router.use('/trip', approveOrRejectRequest);
 
 export default router;
