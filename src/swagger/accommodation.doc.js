@@ -243,4 +243,108 @@ export default {
       },
     },
   },
+  '/api/accommodations/{id}/createFeedback': {
+    post: {
+      summary: 'Add feedback to an accommodation',
+      tags: ['Accommodations'],
+      description: 'A user can give feedback to an accommodation',
+      parameters: [{ $ref: '#/components/parameters/id' }],
+      requestBody: {
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                feedback: {
+                  type: 'string',
+                  example: 'I love your customer care',
+                },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        200: response('Successfully added a feedback', {
+          message: { type: 'string', example: 'Feedback added' },
+        }),
+      },
+    },
+  },
+  '/api/accommodations/{id}/GetAllFeedbacks': {
+    get: {
+      summary: 'Gets all feedbacks of an accommodation',
+      tags: ['Accommodations'],
+      description: 'An admin can view all the feedbacks of an accommodation',
+      parameters: [
+        {
+          name: 'id',
+          in: 'path',
+          descrpition: 'Please enter accommodation ID here',
+          required: true,
+          type: 'integer',
+        },
+      ],
+      responses: {
+        200: response('Successfully fetched all feedbacks', {
+          feedbacks: {
+            type: 'string',
+            example: 'This hotel has the amazing food ever',
+          },
+        }),
+      },
+    },
+  },
+  '/api/accommodations/{id}/updateFeedback': {
+    patch: {
+      summary: 'Update the feedback of an accommodation',
+      tags: ['Accommodations'],
+      description: 'A user can update the feedback of an accommodation',
+      parameters: [{ $ref: '#/components/parameters/id' }],
+      requestBody: {
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                feedback: {
+                  type: 'string',
+                  example: 'updated feedback',
+                },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        200: response('Successfully updated feedback', {
+          message: { type: 'string', example: 'Feedback updated' },
+        }),
+      },
+    },
+  },
+  '/api/accommodations/{id}/deleteFeedback': {
+    delete: {
+      summary: 'This will delete the feedback of an accommodation',
+      tags: ['Accommodations'],
+      description: 'An admin can delete the feedback of an accommodation',
+      parameters: [
+        {
+          name: 'id',
+          in: 'path',
+          descrpition: 'Please enter accommodation ID here',
+          required: true,
+          type: 'integer',
+        },
+      ],
+      responses: {
+        200: {
+          description: 'Feedback deleted Successfuly',
+        },
+        404: {
+          description: 'Accommodation not found',
+        },
+      },
+    },
+  },
 };

@@ -9,10 +9,17 @@ export default (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      UserAccommodation.belongsTo(models.User, {
+        foreignKey: 'userId',
+      });
+      UserAccommodation.belongsTo(models.Accommodation, {
+        foreignKey: 'accommodationId',
+      });
     }
   }
   UserAccommodation.init(
     {
+      feedback: DataTypes.STRING,
       like: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
@@ -35,5 +42,6 @@ export default (sequelize, DataTypes) => {
       modelName: 'UserAccommodation',
     }
   );
+
   return UserAccommodation;
 };

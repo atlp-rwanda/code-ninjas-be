@@ -4,6 +4,7 @@ import EmailValidation from './EmailValidation';
 import NewPasswordValidation from './newPasswordValidation';
 import RatingValidation from './ratingValidation';
 import CommentValidation from './commentValidation';
+import FeedbackValidation from './feedbackValidation';
 
 export {
   LoginValidation,
@@ -12,4 +13,5 @@ export {
   NewPasswordValidation,
   RatingValidation,
   CommentValidation,
+  FeedbackValidation,
 };

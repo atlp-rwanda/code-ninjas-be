@@ -19,6 +19,7 @@ export default (sequelize, DataTypes) => {
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
       });
+
       User.belongsToMany(models.Accommodation, {
         through: models.UserAccommodation,
         foreignKey: 'userId',
@@ -30,6 +31,10 @@ export default (sequelize, DataTypes) => {
       });
 
       User.hasMany(models.UserTripRequest, {
+        foreignKey: 'userId',
+      });
+
+      User.hasMany(models.UserAccommodation, {
         foreignKey: 'userId',
       });
     }
