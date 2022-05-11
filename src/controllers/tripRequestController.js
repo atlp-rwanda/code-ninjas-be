@@ -383,6 +383,17 @@ class tripController {
     if (numberValidator !== true) {
       return res.status(400).json({ message: 'id must be a number' });
     }
+    const isNotPending = await TripRequest.findOne({
+      where: { requesterId: reqId, id },
+    });
+    if (
+      isNotPending.status === 'approved' ||
+      isNotPending.status === 'rejected'
+    ) {
+      return res.status(400).json({
+        response: 'You can not modify request which was approved or rejected',
+      });
+    }
     await TripRequest.destroy({
       where: {
         requesterId: reqId,
@@ -409,6 +420,17 @@ class tripController {
     if (numberValidator !== true) {
       return res.status(400).json({ message: 'id must be a number' });
     }
+    const isNotPending = await TripRequest.findOne({
+      where: { requesterId: reqId, id },
+    });
+    if (
+      isNotPending.status === 'approved' ||
+      isNotPending.status === 'rejected'
+    ) {
+      return res.status(400).json({
+        response: 'You can not modify request which was approved or rejected',
+      });
+    }
     await TripRequest.update(req.body, {
       where: {
         requesterId: reqId,
@@ -424,7 +446,7 @@ class tripController {
       })
       .catch((error) => {
         res.json({
-          response: 'Ooops, something went wrong. trip request is not created',
+          response: 'Ooops, something went wrong. trip request is not updated',
         });
       });
   };

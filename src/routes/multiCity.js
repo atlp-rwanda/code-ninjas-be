@@ -1,6 +1,6 @@
 import express from 'express';
 import multiCityController from '../controllers/multiCityTrip';
-import { verifyAuth, checkRequester } from '../middlewares';
+import { verifyAuth, checkManager, checkRequester } from '../middlewares';
 import tripRequestValidations from '../validations/tripValidations';
 
 const router = express.Router();
@@ -29,6 +29,20 @@ router.delete(
   '/multiCity/delete/request/:id',
   verifyAuth,
   multiCityController.deleteMultiCityTripRequest
+);
+
+router.get(
+  '/multiCity/requests/manager',
+  verifyAuth,
+  checkManager,
+  multiCityController.getAllMultiCityTripRequestBymanager
+);
+
+router.get(
+  '/multiCity/request/:id/manager',
+  verifyAuth,
+  checkManager,
+  multiCityController.GetsingleMultiCityRequestAtripByManager
 );
 
 export default router;

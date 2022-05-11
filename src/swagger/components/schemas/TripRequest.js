@@ -38,6 +38,10 @@ const TripRequestSchema = {
         type: 'integer',
         description: 'id of accommodation',
       },
+      multiCityTripId: {
+        type: 'string',
+        description: 'id of multi city trip request',
+      },
       status: {
         type: 'ENUM',
       },

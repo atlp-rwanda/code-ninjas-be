@@ -189,6 +189,146 @@ class multiCityController {
       return ErrorResponse.internalServerError(res, error.message);
     }
   };
+
+  static getAllMultiCityTripRequestBymanager = async (req, res) => {
+    try {
+      const tripRequest = await TripRequest.findAll({
+        where: { managerId: req.user.id },
+        include: [
+          {
+            model: Location,
+            as: 'departurePlace',
+            attributes: ['city'],
+          },
+          {
+            model: Location,
+            as: 'Destination',
+            attributes: ['city'],
+          },
+          {
+            model: User,
+            as: 'requester',
+            attributes: ['lastName', 'firstName', 'email'],
+          },
+
+          {
+            model: Accommodation,
+            as: 'Accommodation',
+            attributes: {
+              exclude: [
+                'createdAt',
+                'updatedAt',
+                'geoCoordinates',
+                'locationId',
+                'images',
+                'amenities',
+              ],
+            },
+            include: {
+              model: Location,
+              as: 'Location',
+              attributes: ['city'],
+            },
+          },
+        ],
+        attributes: {
+          exclude: [
+            'createdAt',
+            'updatedAt',
+            'requesterId',
+            'accommodationId',
+            'departure_place',
+            'destination',
+            'managerId',
+          ],
+        },
+      });
+      if (!tripRequest) {
+        return ErrorResponse.notFoundError(res, 'no trip request found');
+      }
+      res.status(200).json({
+        response: 'trip request found',
+        payload: tripRequest,
+      });
+    } catch (error) {
+      return ErrorResponse.internalServerError(res, error.message);
+    }
+  };
+
+  static GetsingleMultiCityRequestAtripByManager = async (req, res) => {
+    const { id } = req.params;
+    try {
+      const tripRequest = await TripRequest.findAll({
+        where: { managerId: req.user.id, multiCityTripId: id },
+        include: [
+          {
+            model: Location,
+            as: 'departurePlace',
+            attributes: ['city'],
+            include: {
+              model: Country,
+              as: 'Country',
+              attributes: ['name'],
+            },
+          },
+          {
+            model: Location,
+            as: 'Destination',
+            attributes: ['city'],
+            include: {
+              model: Country,
+              as: 'Country',
+              attributes: ['name'],
+            },
+          },
+          {
+            model: User,
+            as: 'requester',
+            attributes: ['lastName', 'firstName', 'email'],
+          },
+          {
+            model: Accommodation,
+            as: 'Accommodation',
+            attributes: {
+              exclude: [
+                'createdAt',
+                'updatedAt',
+                'geoCoordinates',
+                'locationId',
+                'images',
+                'amenities',
+              ],
+            },
+            include: {
+              model: Location,
+              as: 'Location',
+              attributes: ['city'],
+            },
+          },
+        ],
+        attributes: {
+          exclude: [
+            'createdAt',
+            'updatedAt',
+            'requesterId',
+            'accommodationId',
+            'departure_place',
+            'destination',
+            'managerId',
+          ],
+        },
+      });
+      if (!tripRequest) {
+        return ErrorResponse.notFoundError(res, 'trip request not found');
+      }
+      res.status(200).json({
+        response: 'trip request found',
+        payload: tripRequest,
+      });
+    } catch (error) {
+      return ErrorResponse.internalServerError(res, error.message);
+    }
+  };
 }
 
 export default multiCityController;
