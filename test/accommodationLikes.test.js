@@ -21,7 +21,6 @@ describe('Liking an accommodation routes', () => {
       .get(`/api/accommodations/${accommodationOne.id}/react`)
       .set('Authorization', `Bearer ${userOne.token}`)
       .send();
-
     expect(res.status).to.be.equal(200);
     expect(res.body).to.have.property('message', 'Like added');
   });
@@ -32,7 +31,6 @@ describe('Liking an accommodation routes', () => {
       .get(`/api/accommodations/${accommodationOne.id}/react`)
       .set('Authorization', `Bearer ${userOne.token}`)
       .send();
-
     expect(res.status).to.be.equal(200);
     expect(res.body).to.have.property('message', 'Like removed');
   });

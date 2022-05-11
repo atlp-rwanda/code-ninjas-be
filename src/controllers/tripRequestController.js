@@ -9,7 +9,8 @@ import ErrorResponse from '../utils/errorResponse';
 
 const { checkManager } = UserService;
 
-const { TripRequest, Accommodation, Location, User, Country } = models;
+const { TripRequest, Accommodation, Location, User, Country, UserTripRequest } =
+  models;
 
 class tripController {
   static requestAtrip = async (req, res) => {
@@ -449,6 +450,87 @@ class tripController {
           response: 'Ooops, something went wrong. trip request is not updated',
         });
       });
+  };
+
+  static addComment = async (req, res) => {
+    try {
+      const findTripRequest = await TripRequest.findOne({
+        where: { id: req.params.id },
+      });
+      if (!findTripRequest) {
+        return ErrorResponse.notFoundError(res, 'Trip request not found');
+      }
+      const provideComment = await findTripRequest.addUser(req.user, {
+        through: { comment: req.body.comment },
+      });
+      return res.status(201).json({
+        status: '201',
+        message: 'Comment added successfully',
+        payload: provideComment,
+      });
+    } catch (error) {
+      ErrorResponse.internalServerError(res, error.message);
+    }
+  };
+
+  static getComments = async (req, res) => {
+    try {
+      const comment = await UserTripRequest.findAll({
+        where: { tripRequestId: req.params.id },
+        include: [
+          {
+            model: User,
+            attributes: ['firstName', 'lastName', 'email'],
+          },
+        ],
+        attributes: {
+          exclude: ['createdAt', 'updatedAt', 'userId', 'tripRequestId'],
+        },
+      });
+      return res.status(200).json({
+        status: '200',
+        message: 'These are all comments of this trip request',
+        payload: comment,
+      });
+    } catch (error) {
+      ErrorResponse.internalServerError(res, error.message);
+    }
+  };
+
+  static updateComment = async (req, res) => {
+    try {
+      const findTripRequest = await TripRequest.findOne({
+        where: { id: req.params.id },
+      });
+      if (!findTripRequest) {
+        return ErrorResponse.notFoundError(res, 'Trip request not found');
+      }
+      const updatedComment = await findTripRequest.addUser(req.user, {
+        through: { comment: req.body.comment },
+      });
+      return res.status(201).json({
+        status: '201',
+        message: 'Comment updated successfully',
+        payload: updatedComment,
+      });
+    } catch (error) {
+      ErrorResponse.internalServerError(res, error.message);
+    }
+  };
+
+  static deleteComment = async (req, res) => {
+    try {
+      const deletedComment = await UserTripRequest.destroy({
+        where: { tripRequestId: req.params.id, userId: req.user.id },
+      });
+      res.status(200).json({
+        status: 200,
+        message: 'Comment deleted successfully',
+        payload: deletedComment,
+      });
+    } catch (error) {
+      ErrorResponse.internalServerError(res, error.message);
+    }
   };
 }
 export default tripController;

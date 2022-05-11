@@ -3,6 +3,7 @@ import tripController from '../controllers/tripRequestController';
 import verifyAuth from '../middlewares/auth';
 import tripRequestValidations from '../validations/singleCityValidator';
 import { checkManager, checkRequester } from '../middlewares';
+import { CommentValidation } from '../validations';
 
 const router = express.Router();
 
@@ -38,4 +39,22 @@ router.patch(
   verifyAuth,
   tripController.updateTripRequest
 );
+
+router.post(
+  '/:id/Comment',
+  verifyAuth,
+  CommentValidation.validateComment,
+  tripController.addComment
+);
+
+router.get('/:id/GetAllComments', verifyAuth, tripController.getComments);
+
+router.patch(
+  '/:id/UpdateComment',
+  verifyAuth,
+  CommentValidation.validateComment,
+  tripController.updateComment
+);
+
+router.delete('/:id/DeleteComment', verifyAuth, tripController.deleteComment);
 export default router;
