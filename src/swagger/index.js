@@ -11,6 +11,7 @@ import accommodationPaths from './accommodation.doc';
 import tripPath from './trip.doc';
 import multiCityPath from './multiCity.doc';
 import approveOrReject from './approveOrReject.doc';
+import chatsPath from './chat.doc';
 
 const docrouter = Router();
 
@@ -28,6 +29,7 @@ const paths = {
   ...tripPath,
   ...multiCityPath,
   ...approveOrReject,
+  ...chatsPath,
 };
 
 const options = {

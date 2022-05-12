@@ -10,6 +10,9 @@ export default (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Room.belongsTo(models.Accommodation, { foreignKey: 'accommodationId' });
+      Room.hasMany(models.ChatMessage, {
+        foreignKey: 'userId',
+      });
     }
   }
   Room.init(

@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
 import dbase from './database/config/database';
 import routes from './routes';
 import logger from './middlewares/logger';
@@ -10,6 +11,7 @@ dbase.authenticate().then(() => {
 
 const app = express();
 
+app.use('/chat', express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.set('view engine', 'ejs');
