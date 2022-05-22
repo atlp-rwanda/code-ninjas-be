@@ -37,6 +37,9 @@ export default (sequelize, DataTypes) => {
       User.hasMany(models.UserAccommodation, {
         foreignKey: 'userId',
       });
+      User.hasMany(models.ChatMessage, {
+        foreignKey: 'userId',
+      });
     }
   }
   User.init(
