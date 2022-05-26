@@ -400,6 +400,98 @@ const tripPath = {
       },
     },
   },
+
+  '/api/trip/statistics?start={start}&end={end}': {
+    get: {
+      tags: ['Trip Statistics'],
+      description: 'Get trip request',
+      summary: 'Get number of trips made during a range of period',
+      parameters: [
+        {
+          name: 'start',
+          in: 'path',
+          required: true,
+          description: 'starting date',
+        },
+        {
+          name: 'end',
+          in: 'path',
+          required: true,
+          description: 'ending date',
+        },
+      ],
+
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+
+      responses: {
+        200: {
+          description: 'Trip Requests Retrivied successfully',
+        },
+        400: {
+          description: 'Validation Error',
+        },
+        401: {
+          description: 'Invalid credentials',
+        },
+        404: {
+          description: 'Requests not Found',
+        },
+        500: {
+          description: 'Internal Server Error',
+        },
+      },
+    },
+  },
+
+  '/api/trip/statistics/recent?period={period}&number={number}': {
+    get: {
+      tags: ['Trip Statistics'],
+      description: 'Get trip request',
+      summary: 'Get number of trips made during a range of period',
+      parameters: [
+        {
+          name: 'period',
+          in: 'path',
+          required: true,
+          description: 'type of period like Day, Week, Month and  Year',
+        },
+        {
+          name: 'number',
+          in: 'path',
+          required: true,
+          description: 'number of period',
+        },
+      ],
+
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+
+      responses: {
+        200: {
+          description: 'Trip Requests Retrivied successfully',
+        },
+        400: {
+          description: 'Validation Error',
+        },
+        401: {
+          description: 'Invalid credentials',
+        },
+        404: {
+          description: 'Requests not Found',
+        },
+        500: {
+          description: 'Internal Server Error',
+        },
+      },
+    },
+  },
 };
 
 export default tripPath;
