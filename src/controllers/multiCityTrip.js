@@ -61,7 +61,6 @@ class multiCityController {
           },
           {
             model: Accommodation,
-            as: 'Accommodation',
             attributes: {
               exclude: [
                 'createdAt',
@@ -126,7 +125,6 @@ class multiCityController {
 
           {
             model: Accommodation,
-            as: 'Accommodation',
             attributes: {
               exclude: [
                 'createdAt',
@@ -213,7 +211,6 @@ class multiCityController {
 
           {
             model: Accommodation,
-            as: 'Accommodation',
             attributes: {
               exclude: [
                 'createdAt',
@@ -288,7 +285,6 @@ class multiCityController {
           },
           {
             model: Accommodation,
-            as: 'Accommodation',
             attributes: {
               exclude: [
                 'createdAt',

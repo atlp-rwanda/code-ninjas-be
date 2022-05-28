@@ -306,8 +306,14 @@ const tripPath = {
         400: {
           description: 'Validation Error',
         },
+        401: {
+          description: 'Invalid credentials',
+        },
         404: {
-          description: 'Trip request Not found',
+          description: 'Requests not Found',
+        },
+        500: {
+          description: 'Internal Server Error',
         },
       },
     },
@@ -333,8 +339,14 @@ const tripPath = {
         400: {
           description: 'Validation Error',
         },
+        401: {
+          description: 'Invalid credentials',
+        },
         404: {
-          description: 'Trip request Not found',
+          description: 'Requests not Found',
+        },
+        500: {
+          description: 'Internal Server Error',
         },
       },
     },
@@ -367,8 +379,14 @@ const tripPath = {
         400: {
           description: 'Validation Error',
         },
+        401: {
+          description: 'Invalid credentials',
+        },
         404: {
-          description: 'Trip request Not found',
+          description: 'Requests not Found',
+        },
+        500: {
+          description: 'Internal Server Error',
         },
       },
     },
@@ -394,8 +412,179 @@ const tripPath = {
         400: {
           description: 'Validation Error',
         },
+        401: {
+          description: 'Invalid credentials',
+        },
         404: {
-          description: 'Trip request Not found',
+          description: 'Requests not Found',
+        },
+        500: {
+          description: 'Internal Server Error',
+        },
+      },
+    },
+  },
+  '/api/trip/search/byKey?destination={searchValue}': {
+    get: {
+      tags: ['Trip Request Search'],
+      description: 'Get trip request',
+      summary: 'Get trip requests based on destination ',
+      parameters: [
+        {
+          name: 'searchValue',
+          in: 'path',
+          required: true,
+          description: 'Search Value',
+        },
+      ],
+
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+
+      responses: {
+        200: {
+          description: 'Trip Requests Searched and Found',
+        },
+        400: {
+          description: 'Validation Error',
+        },
+        401: {
+          description: 'Invalid credentials',
+        },
+        404: {
+          description: 'Requests not Found',
+        },
+        500: {
+          description: 'Internal Server Error',
+        },
+      },
+    },
+  },
+
+  '/api/trip/search/byKey?departure={searchValue}': {
+    get: {
+      tags: ['Trip Request Search'],
+      description: 'Get trip request',
+      summary: 'Get trip requests based on departure of the travelers ',
+      parameters: [
+        {
+          name: 'searchValue',
+          in: 'path',
+          required: true,
+          description: 'Search Value',
+        },
+      ],
+
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+
+      responses: {
+        200: {
+          description: 'Trip Requests Searched and Found',
+        },
+        400: {
+          description: 'Validation Error',
+        },
+        401: {
+          description: 'Invalid credentials',
+        },
+        404: {
+          description: 'Requests not Found',
+        },
+        500: {
+          description: 'Internal Server Error',
+        },
+      },
+    },
+  },
+
+  '/api/trip/search/byKey?currentStatus={searchValue}': {
+    get: {
+      tags: ['Trip Request Search'],
+      description: 'Get trip request',
+      summary: 'Get trip requests based on the current status of the request',
+      parameters: [
+        {
+          name: 'searchValue',
+          in: 'path',
+          required: true,
+          description: 'Search Value',
+        },
+      ],
+
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+
+      responses: {
+        200: {
+          description: 'Trip Requests Searched and Found',
+        },
+        400: {
+          description: 'Validation Error',
+        },
+        401: {
+          description: 'Invalid credentials',
+        },
+        404: {
+          description: 'Requests not Found',
+        },
+        500: {
+          description: 'Internal Server Error',
+        },
+      },
+    },
+  },
+
+  '/api/trip/search/byKey?departure={origin}&destination={destination}': {
+    get: {
+      tags: ['Trip Request Search'],
+      description: 'Get trip request',
+      summary: 'Get trip requests based on the origin and destination',
+      parameters: [
+        {
+          name: 'origin',
+          in: 'path',
+          required: true,
+          description: 'Travel departure',
+        },
+        {
+          name: 'destination',
+          in: 'path',
+          required: true,
+          description: 'Travel destination ',
+        },
+      ],
+
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+
+      responses: {
+        200: {
+          description: 'Trip Requests Searched and Found',
+        },
+        400: {
+          description: 'Validation Error',
+        },
+        401: {
+          description: 'Invalid credentials',
+        },
+        404: {
+          description: 'Requests not Found',
+        },
+        500: {
+          description: 'Internal Server Error',
         },
       },
     },

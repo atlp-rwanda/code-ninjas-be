@@ -120,7 +120,6 @@ class tripController {
 
         {
           model: Accommodation,
-          as: 'Accommodation',
           attributes: {
             exclude: [
               'createdAt',
@@ -202,7 +201,6 @@ class tripController {
         },
         {
           model: Accommodation,
-          as: 'Accommodation',
           attributes: [
             'name',
             'description',
@@ -282,7 +280,6 @@ class tripController {
         },
         {
           model: Accommodation,
-          as: 'Accommodation',
           attributes: [
             'name',
             'description',
@@ -342,7 +339,6 @@ class tripController {
         },
         {
           model: Accommodation,
-          as: 'Accommodation',
           attributes: {
             exclude: [
               'createdAt',

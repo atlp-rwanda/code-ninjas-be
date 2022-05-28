@@ -12,6 +12,7 @@ import tripStatistics from './tripStats';
 import multiCity from './multiCity';
 import approveOrRejectRequest from './approveOrRejectRequest';
 import chatRoutes from './chats';
+import tripSearchRouter from './tripRequestsSearchRoutes';
 
 const router = Router();
 
@@ -28,5 +29,6 @@ router.use('/trip', multiCity);
 router.use('/trip', tripStatistics);
 router.use('/trip', approveOrRejectRequest);
 router.use('/chats', chatRoutes);
+router.use('/trip', tripSearchRouter);
 
 export default router;
