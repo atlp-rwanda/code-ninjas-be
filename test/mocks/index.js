@@ -89,17 +89,17 @@ export const modelData = {
 };
 
 export const credentials = {
+  firstName: 'Test',
+  lastName: 'User',
+  email: process.env.ADMIN_ACCOUNT_EMAIL,
   userName: 'Johnny',
-  email: process.env.TEST_INIT_EMAIL,
-  password: 'Password@2022',
-  firstName: 'John',
-  lastName: 'Doe',
+  password: process.env.ADMIN_ACCOUNT_PASSWORD,
 };
 
 export const User = {
-  FirstName: 'JaneD',
-  LastName: 'DoeS',
-  Email: 'admin@admin.com',
+  firstName: 'JaneD',
+  lastName: 'DoeS',
+  email: 'admin@admin.com',
   UserName: 'DoeS',
   Password: 'password',
   RoleId: '4',

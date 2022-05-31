@@ -12,7 +12,6 @@ import {
   invalidFirstNameUser,
   invalidLastNameUser,
   dbInitUser,
-  dummyEmailUser,
   realUser,
   realUserWithId,
   modelData,

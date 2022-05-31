@@ -48,7 +48,7 @@ describe('ROLE END-POINT TEST', () => {
       password: process.env.ADMIN_ACCOUNT_PASSWORD,
     });
 
-    const Token = response.body.accessToken;
+    const Token = response.body.body.accessToken;
     const res = await request(app)
       .get(`/api/users`)
       .set('Authorization', `Bearer ${Token}`);
@@ -65,7 +65,7 @@ describe('ROLE END-POINT TEST', () => {
       password: process.env.ADMIN_ACCOUNT_PASSWORD,
     });
 
-    const Token = response.body.accessToken;
+    const Token = response.body.body.accessToken;
 
     const res = await request(app)
       .post(`/api/roles/assign/${userId}`)

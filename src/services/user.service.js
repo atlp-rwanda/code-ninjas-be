@@ -6,6 +6,11 @@ class UserService {
     return user;
   };
 
+  static async updateUser(user, param) {
+    const updateduser = await user.update(param);
+    return updateduser;
+  }
+
   static findUser = async (searchParams) => {
     const user = await User.findOne({ where: searchParams });
 

@@ -12,9 +12,9 @@ import {
   checkUserById,
 } from '../services/role.service';
 
-const { createUser, checkUser, findUser } = UserService;
+const { createUser, checkUser } = UserService;
 
-const { User, Role } = models;
+const { Role } = models;
 
 class UserController {
   static createUser = async (req, res) => {

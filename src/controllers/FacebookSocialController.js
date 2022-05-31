@@ -48,8 +48,8 @@ class facebookController {
       return successResponse(
         res.header('Authorization', `Bearer ${accessTokenObject.token}`),
         200,
+        'logged in successfully',
         {
-          message: 'logged in successfully',
           accessToken: accessTokenObject.token,
           refreshToken: refreshTokenObject.token,
         }

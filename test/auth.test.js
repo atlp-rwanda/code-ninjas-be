@@ -96,7 +96,7 @@ describe('Testing authentication routes', () => {
       .request(app)
       .post('/api/auth/login')
       .send({ email, password });
-    const { accessToken } = user.body;
+    const { accessToken } = user.body.body;
     const res = await chai
       .request(app)
       .get('/api/auth/logout')

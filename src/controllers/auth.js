@@ -29,8 +29,8 @@ class Auth {
       return successRes(
         res.header('Authorization', `Bearer ${accessTokenObject.token}`),
         200,
+        'User login successful :)',
         {
-          message: 'User login successful :)',
           accessToken: accessTokenObject.token,
           refreshToken: refreshTokenObject.token,
         }
@@ -61,8 +61,8 @@ class Auth {
       return successRes(
         res.header('Authorization', `Bearer ${accessTokenObject.token}`),
         200,
+        'Token creation successful :)',
         {
-          message: 'Token creation successful :)',
           accessToken: accessTokenObject.token,
           refreshToken: refreshTokenObject.token,
         }
@@ -83,7 +83,7 @@ class Auth {
         `${process.env.NODE_ENV}:user-${user.id}-access-${tokenId}`
       );
 
-      return successRes(res, 200, { message: 'User logout successful' });
+      return successRes(res, 200, 'User logout successful');
     } catch (error) {
       return ErrorResponse.internalServerError(
         res,
